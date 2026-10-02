@@ -32,12 +32,23 @@ function AmbientCursor() {
   );
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function AppShell() {
   const location = useLocation();
   
   // Catch-all redirect is handled by Routes
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }} className="min-h-screen text-[#111] font-sans selection:bg-black selection:text-white overflow-hidden relative">
+      <ScrollToTop />
       <AmbientCursor />
       
       {/* Floating Pill Nav */}
