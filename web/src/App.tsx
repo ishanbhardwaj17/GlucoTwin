@@ -40,23 +40,6 @@ function AppShell() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }} className="min-h-screen text-[#111] font-sans selection:bg-black selection:text-white overflow-hidden relative">
       <AmbientCursor />
       
-      {/* Healthcare Background Elements */}
-      <motion.img 
-        src="/assets/cell.jpg" 
-        alt="Abstract Cell" 
-        className="fixed top-20 left-10 w-64 h-64 object-cover rounded-full opacity-80 blur-sm floating-element-delayed -z-[5] shadow-2xl pointer-events-none"
-      />
-      <motion.img 
-        src="/assets/dna.jpg" 
-        alt="Abstract DNA" 
-        className="fixed bottom-10 right-10 w-96 h-96 object-cover rounded-3xl opacity-80 blur-sm floating-element -z-[5] shadow-2xl pointer-events-none"
-      />
-      <motion.img 
-        src="/assets/cross.jpg" 
-        alt="Abstract Cross" 
-        className="fixed top-1/3 right-1/4 w-72 h-72 object-cover rounded-full opacity-70 blur-sm floating-element-fast -z-[5] shadow-2xl pointer-events-none"
-      />
-
       {/* Floating Pill Nav */}
       <motion.div className="fixed w-full top-8 z-50 px-6 flex justify-center pointer-events-none floating-element-fast" initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}>
         <div className="glass-pill px-8 h-16 flex items-center justify-between gap-12 pointer-events-auto w-full max-w-5xl shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
@@ -89,6 +72,24 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
+        {/* Truly Fixed Background Elements */}
+        <div className="fixed inset-0 pointer-events-none z-[-10] overflow-hidden">
+          <img 
+            src="/assets/cell.jpg" 
+            alt="Abstract Cell" 
+            className="absolute top-20 left-10 w-64 h-64 object-cover rounded-full opacity-80 blur-sm floating-element-delayed shadow-2xl"
+          />
+          <img 
+            src="/assets/dna.jpg" 
+            alt="Abstract DNA" 
+            className="absolute bottom-10 right-10 w-96 h-96 object-cover rounded-3xl opacity-80 blur-sm floating-element shadow-2xl"
+          />
+          <img 
+            src="/assets/cross.jpg" 
+            alt="Abstract Cross" 
+            className="absolute top-1/3 right-1/4 w-72 h-72 object-cover rounded-full opacity-70 blur-sm floating-element-fast shadow-2xl"
+          />
+        </div>
         <AppShell />
       </Router>
       <ReactQueryDevtools initialIsOpen={false} />
