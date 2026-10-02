@@ -138,7 +138,7 @@ export function PatientDetail() {
           </div>
           <div className="flex-1 relative bg-[#fafafa]">
             <AnimatePresence mode="wait">
-              <motion.div key={activeTab} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} transition={{ duration: 0.3 }} className="h-full w-full absolute inset-0 p-8">
+              <motion.div key={activeTab} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} transition={{ duration: 0.3 }} className="h-full w-full absolute inset-0 p-8 overflow-y-auto hide-scrollbar">
                 {activeTab === 'chart' && <GlucoseChart history={chartHistory} forecast={liveForecast} whatIfForecast={whatIfForecast} targetLow={patient.target_range.low} targetHigh={patient.target_range.high} />}
                 {activeTab === 'explain' && <ExplanationPanel patientId={patientId} />}
                 {activeTab === 'whatif' && <WhatIfPanel patientId={patientId} basePeak={liveRisk?.peak_predicted_mgdl ?? 200} baseProb={liveRisk?.probability ?? 0.5} onForecastChange={(f) => { setWhatIfForecast(f); if (f) setActiveTab('chart'); }} />}
