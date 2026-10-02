@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { Sliders, ArrowUpRight, ArrowDownLeft, Info, Utensils, PersonStanding, Frown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, RotateCcw } from 'lucide-react';
 import { useWhatIf } from '@/api/client';
-import type { WhatIfRequest } from '@/types/schema';
+import type { WhatIfRequest, WhatIfResponse } from '@/types/schema';
 import { cn } from '@/lib/utils';
+import { staggerItem } from './Animations';
 
 interface Props {
   patientId: string;
@@ -11,247 +13,105 @@ interface Props {
   onForecastChange?: (forecast: import('@/types/schema').ForecastPoint[] | null) => void;
 }
 
-// ─── Slider ───────────────────────────────────────────────────────────────
-
-function Slider({
-  id, label, icon, value, min, max, step, unit, color, onChange
-}: {
-  id: string; label: string; icon: React.ReactNode; value: number;
-  min: number; max: number; step: number; unit: string; color: string;
-  onChange: (v: number) => void;
-}) {
+function Slider({ id, label, value, min, max, step, unit, onChange }: any) {
   const pct = ((value - min) / (max - min)) * 100;
   return (
-    <div>
-      <div className="flex items-center justify-between mb-2">
-        <label htmlFor={id} className="flex items-center gap-2 text-sm font-medium text-slate-300">
-          {icon}
-          {label}
-        </label>
-        <span className="font-tabular text-sm font-bold" style={{ color }}>
-          {value}{unit}
+    <div className="bg-white/40 p-6 border-2 border-black group transition-colors hover:bg-white/80">
+      <div className="flex items-center justify-between mb-6">
+        <label htmlFor={id} className="text-black text-sm font-bold uppercase tracking-widest">{label}</label>
+        <span className="font-display text-black text-2xl">
+          {value}<span className="text-black/50 font-sans font-bold text-[10px] ml-1 uppercase tracking-widest">{unit}</span>
         </span>
       </div>
-      <input
-        id={id}
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
-        style={{
-          background: `linear-gradient(to right, ${color} ${pct}%, rgba(51,65,85,0.6) ${pct}%)`
-        }}
-      />
-      <div className="flex justify-between text-[10px] text-slate-600 mt-1 font-tabular">
-        <span>{min}{unit}</span>
-        <span>{max}{unit}</span>
+      <div className="relative h-2 w-full bg-black/10 border border-black overflow-hidden">
+        <motion.div 
+          className="absolute inset-y-0 left-0 bg-black" 
+          animate={{ width: `${pct}%` }} 
+          transition={{ duration: 0.2, type: 'spring', stiffness: 400, damping: 30 }}
+        />
+        <input id={id} type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
       </div>
     </div>
   );
 }
 
-// ─── Delta badge ──────────────────────────────────────────────────────────
+function MetricCard({ label, baseline, scenario, delta, unit, invertDelta, index }: any) {
+  const isPositive = delta > 0;
+  const isBad = invertDelta ? !isPositive : isPositive;
+  const deltaColor = delta === 0 ? 'text-black/50' : isBad ? 'text-black bg-black/10' : 'text-black bg-transparent border border-black';
 
-function Delta({ value, unit, invert = false }: { value: number; unit: string; invert?: boolean }) {
-  const isPositive = value > 0;
-  const isBad = invert ? !isPositive : isPositive;
-  const color = isBad ? 'text-red-400' : 'text-emerald-400';
   return (
-    <span className={cn('font-tabular text-xs font-semibold flex items-center gap-0.5', color)}>
-      {isPositive
-        ? <ArrowUpRight className="w-3 h-3" />
-        : <ArrowDownLeft className="w-3 h-3" />}
-      {isPositive ? '+' : ''}{value}{unit}
-    </span>
+    <motion.div variants={staggerItem} initial="hidden" animate="show" custom={index} className="bg-white/40 border-2 border-black p-5 shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-transform">
+      <div className="flex justify-between items-start mb-6 border-b border-black/20 pb-4">
+        <p className="text-black/50 text-xs font-bold uppercase tracking-widest">{label}</p>
+        <span className={cn('px-2 py-0.5 font-bold text-[10px] uppercase tracking-wider', deltaColor)}>
+          {delta === 0 ? 'SAME' : `${isPositive ? '+' : ''}${delta}${unit}`}
+        </span>
+      </div>
+      <div className="grid grid-cols-2 gap-6">
+        <div>
+          <p className="text-black/40 text-[10px] font-bold uppercase tracking-widest mb-1">Baseline</p>
+          <p className="font-display text-3xl text-black/50">{baseline}<span className="text-xs ml-1 font-sans">{unit}</span></p>
+        </div>
+        <div>
+          <p className="text-black text-[10px] font-bold uppercase tracking-widest mb-1">Simulated</p>
+          <p className="font-display text-4xl text-black">{scenario}<span className="text-xs text-black/50 ml-1 font-sans">{unit}</span></p>
+        </div>
+      </div>
+    </motion.div>
   );
 }
 
-// ─── Metric Card ──────────────────────────────────────────────────────────
-
-function MetricCard({
-  label, baseline, scenario, delta, unit, invertDelta
-}: {
-  label: string; baseline: number | string; scenario: number | string;
-  delta: number; unit: string; invertDelta?: boolean;
-}) {
-  return (
-    <div className="bg-slate-900/60 border border-slate-700/50 rounded-xl p-3">
-      <p className="text-xs text-slate-500 mb-2">{label}</p>
-      <div className="grid grid-cols-2 gap-2">
-        <div>
-          <p className="text-[10px] text-slate-600 mb-0.5">Baseline</p>
-          <p className="font-tabular text-base font-bold text-slate-300">{baseline}<span className="text-xs text-slate-500 ml-1">{unit}</span></p>
-        </div>
-        <div>
-          <p className="text-[10px] text-slate-600 mb-0.5">Scenario</p>
-          <p className="font-tabular text-base font-bold text-slate-100">{scenario}<span className="text-xs text-slate-500 ml-1">{unit}</span></p>
-        </div>
-      </div>
-      <div className="mt-1.5">
-        <Delta value={delta} unit={unit} invert={invertDelta} />
-      </div>
-    </div>
-  );
-}
-
-// ─── Main Component ────────────────────────────────────────────────────────
-
-export function WhatIfPanel({ patientId, basePeak, baseProb, onForecastChange }: Props) {
+export function WhatIfPanel({ patientId, onForecastChange }: Props) {
   const [carbs, setCarbs] = useState(0);
   const [walkMin, setWalkMin] = useState(0);
-  const [stress, setStress] = useState<'none' | 'mild' | 'high'>('none');
-  const [result, setResult] = useState<import('@/types/schema').WhatIfResponse | null>(null);
-
+  const [result, setResult] = useState<WhatIfResponse | null>(null);
   const mutation = useWhatIf(patientId);
 
   const handleRun = async () => {
-    const req: WhatIfRequest = {
-      patient_id: patientId,
-      carbs_g: carbs,
-      walk_duration_min: walkMin,
-      stress_level: stress,
-    };
     try {
-      const res: import('@/types/schema').WhatIfResponse = await mutation.mutateAsync(req);
-      setResult(res);
-      onForecastChange?.(res.forecast_scenario);
-    } catch {
-      // silent
-    }
+      const res = await mutation.mutateAsync({ patient_id: patientId, carbs_g: carbs, walk_duration_min: walkMin, stress_level: 'none' });
+      setResult(res); onForecastChange?.(res.forecast_scenario);
+    } catch { /* silent */ }
   };
 
   const handleReset = () => {
-    setCarbs(0);
-    setWalkMin(0);
-    setStress('none');
-    setResult(null);
-    onForecastChange?.(null);
+    setCarbs(0); setWalkMin(0); setResult(null); onForecastChange?.(null);
   };
 
   return (
-    <div className="space-y-4">
-      {/* Controls */}
-      <div className="space-y-4">
-        <Slider
-          id="whatif-carbs"
-          label="Carbohydrate Intake"
-          icon={<Utensils className="w-4 h-4 text-orange-400" />}
-          value={carbs}
-          min={0}
-          max={120}
-          step={5}
-          unit="g"
-          color="#f97316"
-          onChange={setCarbs}
-        />
-        <Slider
-          id="whatif-walk"
-          label="Walking Duration"
-          icon={<PersonStanding className="w-4 h-4 text-sky-400" />}
-          value={walkMin}
-          min={0}
-          max={60}
-          step={5}
-          unit=" min"
-          color="#38bdf8"
-          onChange={setWalkMin}
-        />
-
-        {/* Stress level */}
-        <div>
-          <label className="flex items-center gap-2 text-sm font-medium text-slate-300 mb-2">
-            <Frown className="w-4 h-4 text-purple-400" />
-            Stress Level
-          </label>
-          <div className="flex gap-2">
-            {(['none', 'mild', 'high'] as const).map((s) => (
-              <button
-                key={s}
-                id={`whatif-stress-${s}`}
-                onClick={() => setStress(s)}
-                className={cn(
-                  'flex-1 py-1.5 text-xs font-semibold rounded-lg border capitalize transition-all',
-                  stress === s
-                    ? s === 'none' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                      : s === 'mild' ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                      : 'bg-red-500/20 text-red-300 border-red-500/40'
-                    : 'bg-slate-900 text-slate-500 border-slate-700/50 hover:text-slate-300'
-                )}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </div>
+    <div className="space-y-8 max-w-3xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] bg-white/40">
+        <Slider id="whatif-carbs" label="Carb Load" value={carbs} min={0} max={120} step={5} unit="g" onChange={setCarbs} />
+        <div className="hidden md:block w-[2px] bg-black h-full" />
+        <Slider id="whatif-walk" label="Activity" value={walkMin} min={0} max={60} step={5} unit="m" onChange={setWalkMin} />
       </div>
 
-      {/* Action buttons */}
-      <div className="flex gap-2">
-        <button
-          id="whatif-run"
-          onClick={handleRun}
-          disabled={mutation.isPending}
-          className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-xl text-sm font-semibold transition-all"
-        >
-          {mutation.isPending
-            ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            : <Sliders className="w-4 h-4" />}
-          {mutation.isPending ? 'Computing…' : 'Run Scenario'}
+      <div className="flex gap-4 items-center">
+        <button onClick={handleRun} disabled={mutation.isPending} className="flex-1 flex items-center justify-center gap-3 disabled:opacity-50 h-16 btn-editorial">
+          {mutation.isPending ? <div className="w-6 h-6 rounded-full border-2 border-black/30 border-t-black animate-spin" /> : <><Play className="w-5 h-5 fill-current" /> EXECUTE SIMULATION</>}
         </button>
+        <AnimatePresence>
+          {result && (
+            <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} onClick={handleReset} className="w-16 h-16 flex items-center justify-center bg-transparent border-2 border-black text-black hover:bg-black hover:text-[#e8e5df] transition-colors shadow-[4px_4px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]">
+              <RotateCcw className="w-5 h-5" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <AnimatePresence>
         {result && (
-          <button
-            id="whatif-reset"
-            onClick={handleReset}
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-medium border border-slate-700/50 transition-all"
-          >
-            Reset
-          </button>
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="pt-8 overflow-hidden">
+            <h3 className="font-display text-2xl text-black uppercase tracking-tight mb-6">Simulation Impact</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <MetricCard index={0} label="Peak" baseline={result.baseline.peak_mgdl} scenario={result.scenario.peak_mgdl} delta={result.delta.peak_mgdl} unit="mg/dL" invertDelta />
+              <MetricCard index={1} label="Spike Risk" baseline={`${Math.round(result.baseline.spike_probability * 100)}`} scenario={`${Math.round(result.scenario.spike_probability * 100)}`} delta={Math.round(result.delta.spike_probability * 100)} unit="%" invertDelta />
+              <MetricCard index={2} label="TBR" baseline={result.baseline.minutes_above_180} scenario={result.scenario.minutes_above_180} delta={result.delta.minutes_above_180} unit="m" invertDelta />
+            </div>
+          </motion.div>
         )}
-      </div>
-
-      {/* Results */}
-      {result && (
-        <div className="space-y-3 animate-slide-in">
-          <div className="grid grid-cols-1 gap-2">
-            <MetricCard
-              label="Predicted Peak Glucose"
-              baseline={result.baseline.peak_mgdl}
-              scenario={result.scenario.peak_mgdl}
-              delta={result.delta.peak_mgdl}
-              unit="mg/dL"
-              invertDelta
-            />
-            <MetricCard
-              label="Spike Probability"
-              baseline={`${Math.round(result.baseline.spike_probability * 100)}%`}
-              scenario={`${Math.round(result.scenario.spike_probability * 100)}%`}
-              delta={Math.round(result.delta.spike_probability * 100)}
-              unit="%"
-              invertDelta
-            />
-            <MetricCard
-              label="Time Above 180 mg/dL"
-              baseline={result.baseline.minutes_above_180}
-              scenario={result.scenario.minutes_above_180}
-              delta={result.delta.minutes_above_180}
-              unit=" min"
-              invertDelta
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Disclaimer */}
-      <div className="flex items-start gap-2 p-3 bg-amber-950/30 border border-amber-500/20 rounded-xl">
-        <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-        <p className="text-xs text-amber-300/80 leading-relaxed">
-          <strong className="text-amber-200">Model estimate for exploration only.</strong>{' '}
-          Not medical advice. Consult a clinician before making any treatment decisions.
-        </p>
-      </div>
+      </AnimatePresence>
     </div>
   );
 }

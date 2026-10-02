@@ -1,7 +1,8 @@
-import { Lightbulb, TrendingUp, TrendingDown, AlertTriangle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useExplanation } from '@/api/client';
 import type { FactorAttribution } from '@/types/schema';
 import { cn } from '@/lib/utils';
+import { StaggerContainer, staggerItem } from './Animations';
 
 interface Props {
   patientId: string;
@@ -12,40 +13,26 @@ function AttributionBar({ attr, maxShare }: { attr: FactorAttribution; maxShare:
   const isRaises = attr.direction === 'raises';
 
   return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
-          {isRaises
-            ? <TrendingUp className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-            : <TrendingDown className="w-3.5 h-3.5 text-sky-400 shrink-0" />}
-          <span className="text-sm text-slate-300 truncate" title={attr.feature}>{attr.feature}</span>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className={cn(
-            'text-xs font-semibold px-1.5 py-0.5 rounded-md font-tabular',
-            isRaises ? 'text-orange-300 bg-orange-500/10' : 'text-sky-300 bg-sky-500/10'
-          )}>
-            {isRaises ? '↑' : '↓'} {attr.share_pct}%
-          </span>
-        </div>
+    <motion.div variants={staggerItem} className="flex flex-col gap-4 py-6 border-b-2 border-black last:border-0 relative">
+      <div className="flex justify-between items-baseline relative z-10">
+        <span className="font-display text-4xl text-black tracking-tight uppercase leading-none">{attr.feature}</span>
+        <span className={cn('text-[10px] font-bold px-3 py-1 border border-black uppercase tracking-widest', isRaises ? 'bg-black text-[#e8e5df]' : 'bg-transparent text-black')}>
+          {isRaises ? '+' : '-'}{attr.share_pct}%
+        </span>
       </div>
 
-      {/* Bar */}
-      <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{
-            width: `${pct}%`,
-            background: isRaises
-              ? 'linear-gradient(90deg, #f97316, #ef4444)'
-              : 'linear-gradient(90deg, #38bdf8, #06b6d4)',
-          }}
+      <div className="h-2 bg-black/10 overflow-hidden relative z-10 border border-black/20">
+        <motion.div
+          className={cn('h-full', isRaises ? 'bg-black' : 'bg-black/50')}
+          initial={{ width: 0 }}
+          whileInView={{ width: `${pct}%` }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         />
       </div>
 
-      {/* Plain text */}
-      <p className="text-xs text-slate-500 leading-relaxed pl-5">{attr.plain_text}</p>
-    </div>
+      <p className="text-black/60 text-sm font-medium leading-relaxed relative z-10">{attr.plain_text}</p>
+    </motion.div>
   );
 }
 
@@ -54,83 +41,35 @@ export function ExplanationPanel({ patientId }: Props) {
 
   if (isLoading) {
     return (
-      <div className="space-y-3">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="space-y-1.5 animate-pulse">
-            <div className="flex justify-between">
-              <div className="h-4 w-40 bg-slate-800 rounded" />
-              <div className="h-4 w-12 bg-slate-800 rounded" />
-            </div>
-            <div className="h-1.5 bg-slate-800 rounded-full" style={{ width: `${70 - i * 12}%` }} />
-          </div>
-        ))}
+      <div className="flex items-center justify-center py-12">
+        <div className="w-10 h-10 rounded-full border-4 border-black/20 border-t-black animate-spin" />
       </div>
     );
   }
 
   if (error || !explain) {
-    return (
-      <div className="flex items-center gap-2 text-sm text-slate-500 p-3">
-        <AlertTriangle className="w-4 h-4 text-amber-500" />
-        Unable to load explanation.
-      </div>
-    );
+    return <div className="text-black font-bold text-sm p-4 bg-transparent border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]">Unable to load synthesis model.</div>;
   }
 
   const maxShare = Math.max(...explain.attributions.map((a) => a.share_pct));
-  const lowConf = explain.confidence < 0.4;
 
   return (
-    <div className="space-y-4">
-      {/* Low confidence warning */}
-      {lowConf && (
-        <div className="flex items-start gap-2 p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl">
-          <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-          <p className="text-xs text-amber-300">
-            Low confidence ({Math.round(explain.confidence * 100)}%) — significant sensor data missing.
-            Attribution weights are unreliable.
-          </p>
-        </div>
-      )}
-
-      {/* Attribution bars */}
-      <div className="space-y-4">
+    <div className="max-w-2xl">
+      <StaggerContainer className="mb-12">
         {explain.attributions.map((attr) => (
           <AttributionBar key={attr.feature} attr={attr} maxShare={maxShare} />
         ))}
-      </div>
+      </StaggerContainer>
 
-      {/* Summary */}
-      <div className="pt-3 border-t border-slate-800/60">
-        <div className="flex items-start gap-2.5">
-          <div className="w-6 h-6 rounded-lg bg-indigo-500/15 border border-indigo-500/20 flex items-center justify-center shrink-0 mt-0.5">
-            <Lightbulb className="w-3.5 h-3.5 text-indigo-400" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-slate-400 mb-1">Model Summary</p>
-            <p className="text-sm text-slate-300 leading-relaxed">{explain.summary}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Confidence */}
-      <div className="flex items-center justify-between text-xs text-slate-500 pt-1">
-        <span>Prediction confidence</span>
-        <div className="flex items-center gap-2">
-          <div className="w-24 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${explain.confidence * 100}%`,
-                background: explain.confidence > 0.7 ? '#10b981' : explain.confidence > 0.4 ? '#f59e0b' : '#ef4444',
-              }}
-            />
-          </div>
-          <span className="font-tabular font-semibold text-slate-300">
-            {Math.round(explain.confidence * 100)}%
-          </span>
-        </div>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="p-8 bg-black border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,0.2)] relative overflow-hidden text-[#e8e5df]"
+      >
+        <p className="text-[#e8e5df] text-xs font-bold uppercase tracking-widest mb-4 inline-block border-b border-[#e8e5df]/30 pb-2">Model Synthesis</p>
+        <p className="text-[#e8e5df] text-lg font-medium leading-relaxed relative z-10">{explain.summary}</p>
+      </motion.div>
     </div>
   );
 }

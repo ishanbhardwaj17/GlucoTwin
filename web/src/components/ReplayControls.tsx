@@ -1,4 +1,5 @@
-import { Play, Pause, Zap, UtensilsCrossed, Wifi, WifiOff, Clock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Play, Pause, FastForward, Activity, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -6,99 +7,84 @@ interface Props {
   speed: number;
   simulatedTime: Date;
   isConnected: boolean;
-  currentGlucose: number;
   onPlay: () => void;
   onPause: () => void;
   onSetSpeed: (speed: number) => void;
-  onInjectMeal: (carbs: number) => void;
+  onInjectMeal: () => void;
 }
 
-const SPEEDS = [
-  { label: '60×', value: 60 },
-  { label: '300×', value: 300 },
-  { label: '900×', value: 900 },
-];
-
 export function ReplayControls({
-  isPlaying, speed, simulatedTime, isConnected, currentGlucose,
+  isPlaying, speed, simulatedTime, isConnected,
   onPlay, onPause, onSetSpeed, onInjectMeal
 }: Props) {
-  const timeLabel = simulatedTime.toLocaleTimeString('en-US', {
-    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-  });
-  const dateLabel = simulatedTime.toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric'
-  });
-
   return (
-    <div className="flex items-center gap-3 flex-wrap">
-      {/* Connection status */}
-      <div className={cn(
-        'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border',
-        isConnected
-          ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
-          : 'bg-slate-800 text-slate-500 border-slate-700/50'
-      )}>
-        {isConnected
-          ? <><Wifi className="w-3.5 h-3.5" /> Live</>
-          : <><WifiOff className="w-3.5 h-3.5" /> Mock Sim</>}
-      </div>
-
-      {/* Play/Pause */}
-      <button
-        id="replay-playpause"
-        onClick={isPlaying ? onPause : onPlay}
-        className={cn(
-          'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold border transition-all duration-150',
-          isPlaying
-            ? 'bg-amber-500/15 text-amber-300 border-amber-500/30 hover:bg-amber-500/25'
-            : 'bg-indigo-500/15 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/25'
-        )}
-      >
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-        {isPlaying ? 'Pause' : 'Play'}
-      </button>
-
-      {/* Speed toggles */}
-      <div className="flex items-center gap-0.5 bg-slate-900 border border-slate-700/50 rounded-lg p-0.5">
-        {SPEEDS.map((s) => (
-          <button
-            key={s.value}
-            id={`replay-speed-${s.value}`}
-            onClick={() => onSetSpeed(s.value)}
-            className={cn(
-              'px-2.5 py-1 rounded-md text-xs font-semibold font-tabular transition-all',
-              speed === s.value
-                ? 'bg-indigo-600 text-white'
-                : 'text-slate-500 hover:text-slate-300'
-            )}
-          >
-            <Zap className="w-3 h-3 inline mr-0.5" />
-            {s.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Simulated time */}
-      <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-900/60 border border-slate-700/50 rounded-lg">
-        <Clock className="w-3.5 h-3.5 text-slate-500" />
-        <div>
-          <p className="font-tabular text-sm font-bold text-slate-200">{timeLabel}</p>
-          <p className="text-[10px] text-slate-500">{dateLabel} · Simulated</p>
+    <div className="flex items-stretch bg-[#e8e5df] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+      
+      <div className="flex items-center gap-2 px-4 border-r-2 border-black bg-white/50">
+        <div className="relative flex items-center justify-center">
+          {isConnected && isPlaying ? (
+            <span className="relative inline-flex h-2 w-2 bg-black animate-pulse" />
+          ) : (
+            <span className="relative inline-flex h-2 w-2 border border-black bg-transparent" />
+          )}
         </div>
+        <span className="text-xs font-bold uppercase tracking-widest text-black w-12 hidden sm:block">
+          {isPlaying ? 'Live' : 'Paused'}
+        </span>
       </div>
 
-      {/* Inject Meal */}
-      <button
-        id="replay-inject-meal"
-        onClick={() => onInjectMeal(60)}
-        title="Inject a 60g carbohydrate meal event into the simulation"
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold border border-slate-700/50 bg-slate-800/60 text-slate-400 hover:bg-orange-500/10 hover:text-orange-300 hover:border-orange-500/30 transition-all duration-150"
-      >
-        <UtensilsCrossed className="w-4 h-4" />
-        Add Meal
-        <span className="text-xs bg-slate-700/60 px-1 py-0.5 rounded font-tabular">60g</span>
-      </button>
+      <div className="flex items-center">
+        <motion.button
+          whileHover={{ backgroundColor: '#000', color: '#e8e5df' }}
+          whileTap={{ scale: 0.95 }}
+          onClick={isPlaying ? onPause : onPlay}
+          className={cn(
+            'w-12 h-12 flex items-center justify-center transition-colors border-r-2 border-black',
+            isPlaying 
+              ? 'bg-transparent text-black'
+              : 'bg-black text-[#e8e5df]'
+          )}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div key={isPlaying ? 'pause' : 'play'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-1" />}
+            </motion.div>
+          </AnimatePresence>
+        </motion.button>
+
+        <motion.button
+          whileHover={{ backgroundColor: '#000', color: '#e8e5df' }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onSetSpeed(speed === 1 ? 5 : speed === 5 ? 20 : 1)}
+          className={cn(
+            'h-12 px-4 flex items-center gap-2 text-xs font-bold transition-colors border-r-2 border-black',
+            speed > 1 
+              ? 'bg-black/10 text-black' 
+              : 'bg-transparent text-black'
+          )}
+        >
+          <FastForward className="w-3.5 h-3.5" />
+          {speed}x
+        </motion.button>
+      </div>
+
+      <div className="flex items-center">
+        <motion.button
+          whileHover={{ backgroundColor: '#000', color: '#e8e5df' }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onInjectMeal}
+          disabled={!isPlaying}
+          className="h-12 px-5 bg-transparent text-black flex items-center gap-2 text-xs font-bold transition-colors disabled:opacity-30 border-r-2 border-black"
+        >
+          <Flame className="w-4 h-4" />
+          <span className="hidden md:inline uppercase tracking-widest">Meal</span>
+        </motion.button>
+      </div>
+
+      <div className="hidden lg:flex items-center gap-2 px-4 font-bold text-[11px] text-black bg-white/50">
+        <Activity className="w-4 h-4" />
+        {simulatedTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
+      </div>
     </div>
   );
 }

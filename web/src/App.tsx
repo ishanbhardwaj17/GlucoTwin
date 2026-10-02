@@ -1,82 +1,66 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Brain, Users, Info, Activity } from 'lucide-react';
 import { PrototypeBanner } from '@/components/PrototypeBanner';
 import { PatientList } from '@/components/PatientList';
 import { PatientDetail } from '@/components/PatientDetail';
 import { AboutModel } from '@/pages/AboutModel';
 import { cn } from '@/lib/utils';
-
-// ─── Query client ──────────────────────────────────────────────────────────
+import { motion } from 'framer-motion';
 
 const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 2,
-      refetchOnWindowFocus: false,
-    },
-  },
+  defaultOptions: { queries: { retry: 2, refetchOnWindowFocus: false } },
 });
 
 // ─── App Shell ─────────────────────────────────────────────────────────────
 
 function AppShell() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200">
-      {/* Non-dismissible prototype banner */}
+    <div className="min-h-screen bg-[#e8e5df] text-[#0a0a0a] font-sans selection:bg-black selection:text-[#e8e5df]">
       <PrototypeBanner />
 
-      {/* Navigation */}
-      <nav className="border-b border-slate-800/60 bg-slate-950/95 backdrop-blur-sm z-30 sticky top-[40px]">
-        <div className="max-w-screen-2xl mx-auto px-6 h-14 flex items-center justify-between">
+      {/* Editorial Nav */}
+      <nav className="sticky top-[28px] z-50 bg-[#e8e5df]/90 backdrop-blur-md border-b-2 border-black">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <Activity className="w-4 h-4 text-white" />
-            </div>
-            <div>
-              <span className="font-black text-lg text-slate-100 tracking-tight">Gluco</span>
-              <span className="font-black text-lg text-gradient-brand tracking-tight">Twin</span>
-            </div>
-            <span className="hidden sm:inline-block text-xs text-slate-600 border border-slate-700/50 px-2 py-0.5 rounded-full font-tabular">
-              T2D Digital Twin
+          <div className="flex items-center gap-4 group hover-target">
+            <motion.div 
+              whileHover={{ rotate: 180 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="w-8 h-8 bg-black flex items-center justify-center font-display text-[#e8e5df] text-lg leading-none pt-1"
+            >
+              GT
+            </motion.div>
+            <span className="font-display text-4xl tracking-tighter text-black uppercase mt-2 group-hover:tracking-widest transition-all duration-500">
+              GlucoTwin
             </span>
           </div>
 
           {/* Nav links */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-6">
             <NavLink
               to="/"
               end
-              id="nav-triage"
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all',
-                  isActive
-                    ? 'bg-indigo-500/15 text-indigo-300'
-                    : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/60'
+                  'text-sm font-bold uppercase tracking-widest transition-colors',
+                  isActive ? 'text-black border-b-2 border-black pb-1' : 'text-black/50 hover:text-black'
                 )
               }
             >
-              <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Triage</span>
+              Dashboard
             </NavLink>
-
             <NavLink
               to="/about"
-              id="nav-about"
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all',
-                  isActive
-                    ? 'bg-indigo-500/15 text-indigo-300'
-                    : 'text-slate-500 hover:text-slate-300 hover:bg-slate-800/60'
+                  'text-sm font-bold uppercase tracking-widest transition-colors',
+                  isActive ? 'text-black border-b-2 border-black pb-1' : 'text-black/50 hover:text-black'
                 )
               }
             >
-              <Brain className="w-4 h-4" />
-              <span className="hidden sm:inline">About Model</span>
+              Methodology
             </NavLink>
           </div>
         </div>
@@ -91,8 +75,6 @@ function AppShell() {
     </div>
   );
 }
-
-// ─── Root ──────────────────────────────────────────────────────────────────
 
 export default function App() {
   return (
