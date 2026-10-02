@@ -8,11 +8,19 @@
     color: #ffffff;
   }
   
+  @keyframes rainbow-bg {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+  
   body {
-    @apply font-sans antialiased bg-black text-white overflow-x-hidden;
+    @apply font-sans antialiased text-white overflow-x-hidden;
+    background: linear-gradient(135deg, #ff007a, #7a00ff, #00d4ff);
+    background-size: 400% 400%;
+    animation: rainbow-bg 10s linear infinite;
   }
 
-  /* God Level 3D Grid Floor */
+  /* God Level 3D Grid Floor - Now colorful */
   .grid-floor {
     position: fixed;
     bottom: -50%;
@@ -20,20 +28,21 @@
     width: 200%;
     height: 150%;
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
     background-size: 100px 100px;
     transform: perspective(1000px) rotateX(75deg);
     transform-origin: top;
     animation: move-grid 20s linear infinite;
     z-index: -1;
     pointer-events: none;
+    mix-blend-mode: overlay;
   }
 
   .grid-fade {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle at center, transparent 0%, #000000 70%);
+    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 80%);
     z-index: -1;
     pointer-events: none;
   }

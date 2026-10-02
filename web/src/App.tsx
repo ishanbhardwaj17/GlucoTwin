@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
 
 function AppShell() {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-hidden relative perspective-[2000px]">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen text-white font-sans selection:bg-white selection:text-black overflow-hidden relative perspective-[2000px]">
       
       {/* 4th Dimensional Background Grid */}
       <div className="grid-floor" />
