@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+venv/
+.env
+data/raw/*
+data/processed/*
+!data/demo/
+models/current/*.pt
+models/current/*.pkl
+web/node_modules/
+web/dist/
+.DS_Store
