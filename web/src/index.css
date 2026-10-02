@@ -4,71 +4,56 @@
 
 @layer base {
   :root {
-    background-color: #000000;
-    color: #ffffff;
-  }
-  
-  @keyframes rainbow-bg {
-    0% { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
+    background-color: #f6f6f6;
+    color: #111111;
   }
   
   body {
-    @apply font-sans antialiased text-white overflow-x-hidden;
-    background: linear-gradient(135deg, #ff007a, #7a00ff, #00d4ff);
-    background-size: 400% 400%;
-    animation: rainbow-bg 10s linear infinite;
-  }
-
-  /* God Level 3D Grid Floor - Now colorful */
-  .grid-floor {
-    position: fixed;
-    bottom: -50%;
-    left: -50%;
-    width: 200%;
-    height: 150%;
-    background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
-    background-size: 100px 100px;
-    transform: perspective(1000px) rotateX(75deg);
-    transform-origin: top;
-    animation: move-grid 20s linear infinite;
-    z-index: -1;
-    pointer-events: none;
-    mix-blend-mode: overlay;
-  }
-
-  .grid-fade {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 80%);
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  @keyframes move-grid {
-    0% { transform: perspective(1000px) rotateX(75deg) translateY(0); }
-    100% { transform: perspective(1000px) rotateX(75deg) translateY(100px); }
-  }
-
-  /* Smooth scrolling for 3D carousel */
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    @apply font-sans antialiased text-[#111] overflow-x-hidden;
+    background-color: #f6f6f6;
+    background-image: radial-gradient(circle at 100% 100%, rgba(0, 0, 0, 0.02) 0%, transparent 50%), 
+                      radial-gradient(circle at 0% 0%, rgba(0, 0, 0, 0.02) 0%, transparent 50%);
   }
 }
 
 @layer components {
-  .s-tier-card {
-    @apply relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl transition-all duration-700 ease-out;
-    transform-style: preserve-3d;
+  .glass-pill {
+    @apply bg-white/70 backdrop-blur-2xl border border-black/5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] rounded-full;
   }
-  .s-tier-card:hover {
-    @apply border-white/80;
-    box-shadow: 0 0 40px rgba(255,255,255,0.1);
+  
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-3xl border border-black/5 rounded-[2rem] shadow-[0_20px_40px_rgba(0,0,0,0.03)] transition-all duration-500;
   }
+  
+  .glass-card:hover {
+    @apply shadow-[0_30px_60px_rgba(0,0,0,0.08)] -translate-y-2;
+  }
+
+  .inline-pill {
+    @apply inline-flex items-center justify-center px-4 py-1 bg-black text-white rounded-full mx-2 align-middle text-sm font-semibold tracking-wide shadow-xl;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

@@ -8,7 +8,7 @@ import { GlucoseChart } from './GlucoseChart';
 import { ReplayControls } from './ReplayControls';
 import { ExplanationPanel } from './ExplanationPanel';
 import { WhatIfPanel } from './WhatIfPanel';
-import { FadeUp, CountUp, TextReveal, StaggerContainer, staggerItem } from './Animations';
+import { FadeUp, CountUp, StaggerContainer, staggerItem } from './Animations';
 import type { ForecastPoint } from '@/types/schema';
 import { cn } from '@/lib/utils';
 
@@ -29,7 +29,7 @@ export function PatientDetail() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-black border-t-transparent animate-spin rounded-full" />
+        <div className="w-12 h-12 border-4 border-black/10 border-t-black animate-spin rounded-full" />
       </div>
     );
   }
@@ -54,23 +54,23 @@ export function PatientDetail() {
       }));
 
   const riskPct = liveRisk ? Math.round(liveRisk.probability * 100) : 0;
+  const isCritical = patient.risk_severity === 'high' && patient.confidence_score >= 0.4;
 
   return (
-    <div className="relative pb-32">
-      {/* ── Sticky Header ── */}
-      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm">
-        <div className="max-w-[1400px] mx-auto px-6 py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="w-12 h-12 bg-sky-600 text-white rounded-full flex items-center justify-center hover:bg-sky-700 transition-colors shadow-md">
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-            </Link>
-            <div>
-              <h1 className="font-display text-5xl tracking-tight text-black uppercase leading-none">{patient.name}</h1>
-              <p className="text-xs text-black/50 font-bold uppercase tracking-widest mt-1">
-                ID:{patient.id} • {patient.age}Y
-              </p>
-            </div>
+    <div className="relative pb-32 max-w-7xl mx-auto px-6">
+      <div className="py-12 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div className="flex items-center gap-6">
+          <Link to="/" className="w-12 h-12 bg-white border border-black/10 shadow-sm text-black rounded-full flex items-center justify-center hover:scale-105 hover:shadow-md transition-all">
+            <ArrowLeft className="w-5 h-5 stroke-[2]" />
+          </Link>
+          <div>
+            <h1 className="font-bold text-4xl tracking-tight text-black">{patient.name}</h1>
+            <p className="text-sm text-black/50 font-medium mt-1">
+              MRN: {patient.mrn} • {patient.age}Y • {patient.id}
+            </p>
           </div>
+        </div>
+        <div className="glass-pill p-1">
           <ReplayControls
             isPlaying={stream.isPlaying} speed={stream.speed} simulatedTime={stream.simulatedTime}
             isConnected={stream.isConnected}
@@ -79,43 +79,48 @@ export function PatientDetail() {
         </div>
       </div>
 
-      {/* ── Hero Stats ── */}
-      <div className="max-w-[1400px] mx-auto px-6 pt-16 pb-12 border-b-2 border-black">
-        <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          <motion.div variants={staggerItem} className="relative">
-            <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2">Live Glucose</p>
-            <div className="flex items-baseline gap-2">
-              <span className="font-display text-[6rem] text-black leading-none tracking-tighter">{liveGlucose}</span>
-            </div>
-            <div className="mt-4 border border-black text-black text-[10px] font-bold uppercase tracking-widest px-2 py-1 inline-block">{liveTrend}</div>
-          </motion.div>
+      <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <motion.div variants={staggerItem} className="glass-card p-8">
+          <p className="text-black/50 text-xs font-semibold uppercase tracking-widest mb-4">Live Glucose</p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-bold text-6xl tracking-tighter text-black">{liveGlucose}</span>
+            <span className="text-lg font-medium text-black/50">mg/dL</span>
+          </div>
+          <div className="mt-4 inline-flex items-center px-3 py-1 rounded-full bg-black/5 text-black font-semibold text-xs tracking-wider uppercase">Trend: {liveTrend}</div>
+        </motion.div>
 
-          <motion.div variants={staggerItem} className="relative">
-            <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2">Spike Risk</p>
-            <span className={cn('font-display text-[6rem] leading-none tracking-tighter', riskPct >= 70 ? 'text-black' : 'text-black')}>
+        <motion.div variants={staggerItem} className={cn("glass-card p-8", isCritical ? "bg-red-500/5 border-red-500/20" : "")}>
+          <p className={cn("text-xs font-semibold uppercase tracking-widest mb-4", isCritical ? "text-red-600" : "text-black/50")}>Spike Risk</p>
+          <div className="flex items-baseline gap-1">
+            <span className={cn('font-bold text-6xl tracking-tighter', isCritical ? 'text-red-600' : 'text-black')}>
               <CountUp to={riskPct} suffix="%" />
             </span>
-            <div className="mt-6 h-1 w-full bg-black/10 overflow-hidden">
-               <motion.div className="absolute inset-y-0 left-0 bg-black" initial={{ width: 0 }} animate={{ width: `${riskPct}%` }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} />
-            </div>
-          </motion.div>
+          </div>
+          <div className="mt-6 h-1.5 w-full bg-black/5 rounded-full overflow-hidden">
+             <motion.div className={cn("h-full rounded-full", isCritical ? "bg-red-500" : "bg-black")} initial={{ width: 0 }} animate={{ width: `${riskPct}%` }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} />
+          </div>
+        </motion.div>
 
-          <motion.div variants={staggerItem} className="relative">
-            <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2">Peak Est.</p>
-            <span className="font-display text-[6rem] text-black leading-none tracking-tighter">{liveRisk?.peak_predicted_mgdl ?? '--'}</span>
-          </motion.div>
+        <motion.div variants={staggerItem} className="glass-card p-8">
+          <p className="text-black/50 text-xs font-semibold uppercase tracking-widest mb-4">Peak Estimate</p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-bold text-6xl tracking-tighter text-black">{liveRisk?.peak_predicted_mgdl ?? '--'}</span>
+            <span className="text-lg font-medium text-black/50">mg/dL</span>
+          </div>
+        </motion.div>
 
-          <motion.div variants={staggerItem} className="relative">
-            <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2 flex items-center gap-2"><Zap className="w-4 h-4" /> ETA</p>
-            <span className="font-display text-[6rem] text-black leading-none tracking-tighter">{liveRisk?.estimated_minutes_to_event ?? '--'}</span>
-            <p className="text-black/50 text-xs font-bold uppercase tracking-widest mt-2">Minutes</p>
-          </motion.div>
-        </StaggerContainer>
-      </div>
+        <motion.div variants={staggerItem} className="glass-card p-8">
+          <p className="text-black/50 text-xs font-semibold uppercase tracking-widest mb-4 flex items-center gap-2"><Zap className="w-4 h-4" /> ETA</p>
+          <div className="flex items-baseline gap-2">
+            <span className="font-bold text-6xl tracking-tighter text-black">{liveRisk?.estimated_minutes_to_event ?? '--'}</span>
+            <span className="text-lg font-medium text-black/50">MIN</span>
+          </div>
+        </motion.div>
+      </StaggerContainer>
 
-      <div className="max-w-[1400px] mx-auto px-6 pt-12 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12">
-        <FadeUp delay={0.5} className="flex flex-col min-h-[600px] border-2 border-black">
-          <div className="flex items-center gap-0 border-b-2 border-black">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8">
+        <FadeUp delay={0.5} className="glass-card flex flex-col min-h-[600px] overflow-hidden">
+          <div className="flex items-center gap-2 p-4 border-b border-black/5 bg-white/50">
             {[
               { id: 'chart', label: 'Forecast' },
               { id: 'explain', label: 'Attribution' },
@@ -124,16 +129,16 @@ export function PatientDetail() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={cn('relative flex-1 py-4 text-xs font-bold uppercase tracking-widest transition-all border-r-2 border-black last:border-r-0', activeTab === tab.id ? 'text-[#e8e5df] bg-black' : 'text-black hover:bg-black/5')}
+                className={cn('relative px-6 py-2.5 rounded-full text-sm font-semibold transition-all', activeTab === tab.id ? 'text-white' : 'text-black/50 hover:text-black')}
               >
-                {activeTab === tab.id && <motion.div layoutId="detailTabEditorial" className="absolute inset-0 bg-black -z-10" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />}
+                {activeTab === tab.id && <motion.div layoutId="detailTab" className="absolute inset-0 bg-black rounded-full -z-10 shadow-md shadow-black/20" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />}
                 <span className="relative z-10">{tab.label}</span>
               </button>
             ))}
           </div>
-          <div className="flex-1 p-8 relative bg-white/50">
+          <div className="flex-1 relative bg-[#fafafa]">
             <AnimatePresence mode="wait">
-              <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} className="h-full w-full absolute inset-0 p-8">
+              <motion.div key={activeTab} initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.02 }} transition={{ duration: 0.3 }} className="h-full w-full absolute inset-0 p-8">
                 {activeTab === 'chart' && <GlucoseChart history={chartHistory} forecast={liveForecast} whatIfForecast={whatIfForecast} targetLow={patient.target_range.low} targetHigh={patient.target_range.high} />}
                 {activeTab === 'explain' && <ExplanationPanel patientId={patientId} />}
                 {activeTab === 'whatif' && <WhatIfPanel patientId={patientId} basePeak={liveRisk?.peak_predicted_mgdl ?? 200} baseProb={liveRisk?.probability ?? 0.5} onForecastChange={(f) => { setWhatIfForecast(f); if (f) setActiveTab('chart'); }} />}
@@ -142,33 +147,33 @@ export function PatientDetail() {
           </div>
         </FadeUp>
 
-        <div className="space-y-12">
-          <FadeUp delay={0.6} className="relative">
-            <h3 className="font-display text-4xl text-black uppercase tracking-tight mb-6">Profile</h3>
-            <div className="space-y-0 border-y-2 border-black">
+        <div className="space-y-8">
+          <FadeUp delay={0.6} className="glass-card p-8">
+            <h3 className="font-bold text-2xl tracking-tight text-black mb-6">Profile</h3>
+            <div className="space-y-4">
               {[
                 { label: 'Twin Status', value: patient.twin_status.replace('_', ' ').toUpperCase() },
                 { label: 'Confidence', value: `${Math.round(patient.confidence_score * 100)}%` },
               ].map(({ label, value }) => (
-                <div key={label} className="flex justify-between items-center py-4 border-b border-black/20 last:border-0">
-                  <span className="text-black/60 text-xs font-bold uppercase tracking-widest">{label}</span>
-                  <span className="font-bold text-black text-sm bg-black/5 border border-black/10 px-3 py-1 rounded-sm">{value}</span>
+                <div key={label} className="flex justify-between items-center py-4 border-b border-black/5 last:border-0">
+                  <span className="text-black/50 text-xs font-semibold uppercase tracking-wider">{label}</span>
+                  <span className="font-bold text-black text-sm bg-black/5 rounded-full px-4 py-1">{value}</span>
                 </div>
               ))}
             </div>
           </FadeUp>
 
-          <FadeUp delay={0.7} className="relative">
-            <h3 className="font-display text-4xl text-black uppercase tracking-tight mb-6">Clinical Labs</h3>
-            <div className="space-y-0 border-y-2 border-black">
+          <FadeUp delay={0.7} className="glass-card p-8">
+            <h3 className="font-bold text-2xl tracking-tight text-black mb-6">Clinical Labs</h3>
+            <div className="space-y-4">
               {[
                 { label: 'HbA1c', value: patient.labs.hba1c_pct, unit: '%', alert: patient.labs.hba1c_pct > 7 },
                 { label: 'eGFR', value: patient.labs.egfr_ml_min, unit: 'mL/min', alert: patient.labs.egfr_ml_min < 60 },
               ].map(({ label, value, unit, alert }) => (
-                <div key={label} className="flex justify-between items-center py-4 border-b border-black/20 last:border-0">
-                  <span className="text-black/60 text-xs font-bold uppercase tracking-widest">{label}</span>
-                  <span className={cn('text-3xl font-display', alert ? 'text-black' : 'text-black')}>
-                    {value} <span className="text-black/40 font-sans text-sm ml-1 font-bold">{unit}</span>
+                <div key={label} className="flex justify-between items-center py-4 border-b border-black/5 last:border-0">
+                  <span className="text-black/50 text-xs font-semibold uppercase tracking-wider">{label}</span>
+                  <span className={cn('text-2xl font-bold tracking-tight', alert ? 'text-red-500' : 'text-black')}>
+                    {value} <span className="text-black/40 text-sm ml-1">{unit}</span>
                   </span>
                 </div>
               ))}
