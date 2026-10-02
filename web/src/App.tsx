@@ -1,30 +1,55 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { PrototypeBanner } from "@/components/PrototypeBanner";
 import { PatientList } from "@/components/PatientList";
 import { PatientDetail } from "@/components/PatientDetail";
 import { AboutModel } from "@/pages/AboutModel";
-import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, NavLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect } from "react";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2, refetchOnWindowFocus: false } },
 });
 
+// A floating orb in the background that follows the mouse slowly
+function AmbientCursor() {
+  useEffect(() => {
+    const cursor = document.getElementById('ambient-cursor');
+    const moveCursor = (e: MouseEvent) => {
+      if (cursor) {
+        cursor.style.transform = `translate(${e.clientX - 150}px, ${e.clientY - 150}px)`;
+      }
+    };
+    window.addEventListener('mousemove', moveCursor);
+    return () => window.removeEventListener('mousemove', moveCursor);
+  }, []);
+  
+  return (
+    <div 
+      id="ambient-cursor" 
+      className="fixed top-0 left-0 w-[300px] h-[300px] rounded-full bg-gradient-to-tr from-blue-400/20 to-purple-400/20 blur-3xl pointer-events-none z-[-1] transition-transform duration-1000 ease-out will-change-transform"
+    />
+  );
+}
+
 function AppShell() {
+  const location = useLocation();
+  
+  // Catch-all redirect is handled by Routes
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }} className="min-h-screen text-[#111] font-sans selection:bg-black selection:text-white overflow-hidden relative">
+      <AmbientCursor />
       
       {/* Floating Pill Nav */}
-      <motion.div className="fixed w-full top-8 z-50 px-6 flex justify-center pointer-events-none" initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.2 }}>
-        <div className="glass-pill px-8 h-16 flex items-center justify-between gap-12 pointer-events-auto w-full max-w-5xl">
-          <NavLink to="/" className="font-display font-bold text-2xl tracking-tighter">GlucoTwin</NavLink>
-          <div className="flex items-center gap-8 font-medium text-sm text-black/60">
-            <NavLink to="/" className={({isActive}) => isActive ? "text-black" : "hover:text-black transition-colors"}>Patients</NavLink>
-            <NavLink to="/about" className={({isActive}) => isActive ? "text-black" : "hover:text-black transition-colors"}>Model Architecture</NavLink>
+      <motion.div className="fixed w-full top-8 z-50 px-6 flex justify-center pointer-events-none floating-element-fast" initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}>
+        <div className="glass-pill px-8 h-16 flex items-center justify-between gap-12 pointer-events-auto w-full max-w-5xl shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
+          <NavLink to="/" className="font-display font-black text-2xl tracking-tighter hover:scale-105 transition-transform">GlucoTwin</NavLink>
+          <div className="flex items-center gap-8 font-semibold text-sm text-black/60">
+            <NavLink to="/" className={({isActive}) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Patients</NavLink>
+            <NavLink to="/about" className={({isActive}) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Architecture</NavLink>
             <div className="w-px h-4 bg-black/10" />
-            <a href="#" className="text-black bg-black/5 hover:bg-black/10 px-4 py-2 rounded-full transition-colors">Log In</a>
-            <a href="#" className="text-white bg-black hover:bg-black/80 shadow-lg px-4 py-2 rounded-full transition-all hover:scale-105 active:scale-95">Book Demo</a>
+            <motion.a href="#" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-black bg-black/5 hover:bg-black/10 px-4 py-2 rounded-full transition-colors font-bold">Log In</motion.a>
+            <motion.a href="#" whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }} whileTap={{ scale: 0.95 }} className="text-white bg-black px-6 py-2 rounded-full transition-all font-bold">Book Demo</motion.a>
           </div>
         </div>
       </motion.div>
@@ -32,10 +57,11 @@ function AppShell() {
       {/* Page content */}
       <div className="pt-40 min-h-screen pb-32">
         <AnimatePresence mode="wait">
-          <Routes>
-            <Route path="/" element={<motion.div key="home" initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, y: -40, filter: 'blur(10px)' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}><PatientList /></motion.div>} />
-            <Route path="/patients/:id" element={<motion.div key="detail" initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }} animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}><PatientDetail /></motion.div>} />
-            <Route path="/about" element={<motion.div key="about" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -40 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}><AboutModel /></motion.div>} />
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<motion.div initial={{ opacity: 0, y: 100, filter: 'blur(20px)', scale: 0.9 }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }} exit={{ opacity: 0, y: -100, filter: 'blur(20px)', scale: 1.1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}><PatientList /></motion.div>} />
+            <Route path="/patients/:id" element={<motion.div initial={{ opacity: 0, y: 100, filter: 'blur(20px)', scale: 0.9 }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }} exit={{ opacity: 0, y: -100, filter: 'blur(20px)', scale: 1.1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}><PatientDetail /></motion.div>} />
+            <Route path="/about" element={<motion.div initial={{ opacity: 0, y: 100, filter: 'blur(20px)', scale: 0.9 }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)', scale: 1 }} exit={{ opacity: 0, y: -100, filter: 'blur(20px)', scale: 1.1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}><AboutModel /></motion.div>} />
+            <Route path="*" element={<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}><PatientList /></motion.div>} />
           </Routes>
         </AnimatePresence>
       </div>
