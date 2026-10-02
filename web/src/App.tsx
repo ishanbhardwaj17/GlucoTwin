@@ -73,24 +73,26 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         {/* Truly Fixed Background Elements */}
-        <div className="fixed inset-0 pointer-events-none z-[-10] overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-20 blur-[2px]">
           <img 
             src="/assets/cell.jpg" 
             alt="Abstract Cell" 
-            className="absolute top-20 left-10 w-64 h-64 object-cover rounded-full opacity-80 blur-sm floating-element-delayed shadow-2xl"
+            className="absolute top-20 left-10 w-96 h-96 object-cover rounded-full floating-element-delayed shadow-2xl"
           />
           <img 
             src="/assets/dna.jpg" 
             alt="Abstract DNA" 
-            className="absolute bottom-10 right-10 w-96 h-96 object-cover rounded-3xl opacity-80 blur-sm floating-element shadow-2xl"
+            className="absolute bottom-10 right-10 w-[500px] h-[500px] object-cover rounded-3xl floating-element shadow-2xl"
           />
           <img 
             src="/assets/cross.jpg" 
             alt="Abstract Cross" 
-            className="absolute top-1/3 right-1/4 w-72 h-72 object-cover rounded-full opacity-70 blur-sm floating-element-fast shadow-2xl"
+            className="absolute top-1/3 right-1/4 w-[400px] h-[400px] object-cover rounded-full floating-element-fast shadow-2xl"
           />
         </div>
-        <AppShell />
+        <div className="relative z-10">
+          <AppShell />
+        </div>
       </Router>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
