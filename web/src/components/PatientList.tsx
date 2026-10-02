@@ -71,9 +71,7 @@ export function PatientList() {
           transition={{ duration: 1.5, delay: 0.3, type: "spring" }}
           className="text-2xl md:text-5xl text-black/60 mt-16 font-bold tracking-tight max-w-4xl mx-auto leading-tight"
         >
-          GlucoTwin, the first forecasting engine where clinicians can see the future 
-          <motion.span animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} className="inline-pill bg-gradient-to-br from-indigo-500 to-fuchsia-500 shadow-[0_0_40px_rgba(99,102,241,0.5)] !px-4 !py-1 text-white mx-3">⚡ AI</motion.span> 
-          right on the timeline.
+          GlucoTwin, the first forecasting engine where clinicians can see the future right on the timeline.
         </motion.p>
       </div>
 
