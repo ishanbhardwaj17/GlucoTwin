@@ -86,19 +86,19 @@ function App() {
         {/* Truly Fixed Background Elements */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-20 blur-[2px]">
           <img 
-            src="/assets/glucose.jpg" 
-            alt="Glucose Molecule" 
+            src="/assets/brain.jpg" 
+            alt="Holographic Brain" 
             className="absolute top-10 left-10 w-96 h-96 object-cover rounded-full mix-blend-darken floating-element shadow-2xl"
           />
           <img 
-            src="/assets/sugar.jpg" 
-            alt="Sugar Crystals" 
-            className="absolute top-1/4 right-[-100px] w-[600px] h-[600px] object-cover rounded-3xl mix-blend-darken floating-element-delayed shadow-2xl"
+            src="/assets/spine.jpg" 
+            alt="Neural Spine" 
+            className="absolute top-1/4 right-[-50px] w-[500px] h-[500px] object-cover rounded-3xl mix-blend-darken floating-element-delayed shadow-2xl"
           />
           <img 
-            src="/assets/cgm.jpg" 
-            alt="CGM Sensor" 
-            className="absolute bottom-10 left-1/4 w-[400px] h-[400px] object-cover rounded-full mix-blend-darken floating-element-fast shadow-2xl"
+            src="/assets/heart.jpg" 
+            alt="AI Heart" 
+            className="absolute bottom-10 left-1/3 w-[450px] h-[450px] object-cover rounded-full mix-blend-darken floating-element-fast shadow-2xl"
           />
         </div>
         <div className="relative z-10">
