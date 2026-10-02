@@ -11,25 +11,32 @@
 
 @layer base {
   :root {
-    background-color: var(--color-brand-bg);
-    color: var(--color-brand-black);
+    background-color: #f8fafc;
+    color: #0f172a;
   }
   
   body {
     @apply font-sans antialiased;
+    background-color: #f8fafc;
     overflow-x: hidden;
   }
   
-  @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
   }
 
-  .animated-bg {
-    background: linear-gradient(-45deg, #ff007f, #7f00ff, #00ffff, #00ff7f, #ffff00, #ff7f00);
-    background-size: 600% 600%;
-    animation: gradient-shift 10s ease infinite;
+  .floating {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  @keyframes clinical-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.2); }
+    50% { box-shadow: 0 0 0 15px rgba(2, 132, 199, 0); }
+  }
+  
+  .pulse-border {
+    animation: clinical-pulse 3s infinite;
   }
 }
 

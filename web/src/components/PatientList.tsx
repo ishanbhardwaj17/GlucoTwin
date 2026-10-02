@@ -103,10 +103,10 @@ export function PatientList() {
         </div>
       </div>
 
-      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8, type: 'spring' }} className="max-w-7xl mx-auto px-6 py-0 sticky top-[108px] z-40 bg-white/20 backdrop-blur-xl border-b-2 border-black">
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8, type: 'spring' }} className="max-w-7xl mx-auto px-6 py-0 sticky top-[108px] z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm">
         <div className="flex flex-col md:flex-row items-center justify-between gap-0">
-          <motion.div whileFocus={{ scale: 1.02 }} className="flex items-center gap-3 w-full md:w-96 border-r-2 border-black px-6 py-4 transition-transform origin-left">
-            <Search className="w-5 h-5 text-black" />
+          <motion.div whileFocus={{ scale: 1.02 }} className="flex items-center gap-3 w-full md:w-96 border-r border-slate-200 px-6 py-4 transition-transform origin-left">
+            <Search className="w-5 h-5 text-slate-400" />
             <input
               type="text"
               placeholder="SEARCH PATIENTS..."
@@ -151,7 +151,7 @@ function PatientCard({ patient, onClick }: { patient: PatientSummary; onClick: (
       layout
       variants={staggerItem}
       onClick={onClick}
-      className="editorial-card cursor-pointer group flex flex-col justify-between min-h-[260px] bg-white/20 backdrop-blur-sm hover:bg-white/40 hover:-translate-y-2 hover:shadow-[8px_8px_0px_rgba(0,0,0,1)] hover:border-x-2"
+      className="relative cursor-pointer group flex flex-col justify-between min-h-[260px] bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:shadow-sky-100 hover:-translate-y-1 transition-all duration-300 p-6"
     >
       <div className="flex justify-between items-start mb-8">
         <div>

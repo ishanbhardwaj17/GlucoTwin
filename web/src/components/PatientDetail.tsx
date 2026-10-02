@@ -58,11 +58,11 @@ export function PatientDetail() {
   return (
     <div className="relative pb-32">
       {/* ── Sticky Header ── */}
-      <div className="sticky top-0 z-40 bg-white/20 backdrop-blur-xl border-b-2 border-black shadow-[0_8px_32px_rgba(0,0,0,0.1)]">
+      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="flex items-center gap-6">
-            <Link to="/" className="w-12 h-12 bg-black text-white flex items-center justify-center hover:bg-white hover:text-black hover:border-2 hover:border-black transition-colors">
-              <ArrowLeft className="w-6 h-6 stroke-[3]" />
+            <Link to="/" className="w-12 h-12 bg-sky-600 text-white rounded-full flex items-center justify-center hover:bg-sky-700 transition-colors shadow-md">
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
             </Link>
             <div>
               <h1 className="font-display text-5xl tracking-tight text-black uppercase leading-none">{patient.name}</h1>
