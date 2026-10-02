@@ -61,8 +61,7 @@ export function PatientList() {
           transition={{ duration: 1.5, type: "spring", bounce: 0.4 }}
           className="text-6xl md:text-[8rem] lg:text-[140px] leading-[0.8] tracking-tighter font-black text-black drop-shadow-2xl"
         >
-          <span className="floating-element inline-block mr-4">Motion</span>
-          <span className="floating-element-delayed inline-block">Graphics</span>
+          <span className="floating-element inline-block">GlucoTwin</span>
         </motion.h1>
         
         <motion.p 
@@ -71,7 +70,7 @@ export function PatientList() {
           transition={{ duration: 1.5, delay: 0.3, type: "spring" }}
           className="text-2xl md:text-5xl text-black/60 mt-16 font-bold tracking-tight max-w-4xl mx-auto leading-tight"
         >
-          GlucoTwin, the first forecasting engine where clinicians can see the future right on the timeline.
+          The first forecasting engine where clinicians can see the future right on the timeline.
         </motion.p>
       </div>
 

@@ -43,8 +43,7 @@ function AppShell() {
       {/* Floating Pill Nav */}
       <motion.div className="fixed w-full top-8 z-50 px-6 flex justify-center pointer-events-none floating-element-fast" initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}>
         <div className="glass-pill px-8 h-16 flex items-center justify-between gap-12 pointer-events-auto w-full max-w-5xl shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
-          <NavLink to="/" className="font-display font-black text-2xl tracking-tighter hover:scale-105 transition-transform">GlucoTwin</NavLink>
-          <div className="flex items-center gap-8 font-semibold text-sm text-black/60">
+          <div className="flex items-center gap-8 font-semibold text-sm text-black/60 w-full justify-center">
             <NavLink to="/" className={({isActive}) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Patients</NavLink>
             <NavLink to="/about" className={({isActive}) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Architecture</NavLink>
             <div className="w-px h-4 bg-black/10" />
