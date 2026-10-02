@@ -21,15 +21,12 @@ function SeverityBadge({ severity, confidence }: { severity: Severity; confidenc
 }
 
 function FilterTab({ label, active, count, onClick }: { label: string; active: boolean; count: number; onClick: () => void }) {
-  return (
-    <button onClick={onClick} className={cn("relative px-6 py-3 font-bold uppercase tracking-widest text-sm transition-all border-x border-transparent", active ? "text-black bg-black/5 border-black/10" : "text-black/40 hover:text-black")}>
+    <button onClick={onClick} className={cn("relative px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] transition-all border border-transparent rounded-full", active ? "bg-white text-black border-white shadow-[0_0_20px_rgba(255,255,255,0.4)]" : "text-white/40 hover:text-white hover:border-white/20")}>
       <span className="flex items-center gap-3">
         {label}
-        <span className={cn('text-[10px] px-2 py-0.5 border', active ? 'border-black text-black' : 'border-black/20 text-black/40')}>{count}</span>
+        <span className={cn('text-[10px] px-2 py-0.5 border rounded-full', active ? 'border-black/20 text-black' : 'border-white/20 text-white/40')}>{count}</span>
       </span>
-      {active && <motion.div layoutId="filterUnderline" className="absolute bottom-0 left-0 right-0 h-1 bg-black" />}
     </button>
-  );
 }
 
 export function PatientList() {
@@ -79,43 +76,43 @@ export function PatientList() {
 
       <div className="max-w-7xl mx-auto px-6 pt-24 pb-20 border-b-2 border-black">
         
-        <TextReveal className="font-display text-[12vw] md:text-[9rem] leading-[0.85] tracking-tight text-black uppercase mb-12">
+        <TextReveal className="font-display text-[12vw] md:text-[9rem] leading-[0.85] tracking-tight text-white uppercase mb-12">
           PREDICTIVE TELEMETRY
         </TextReveal>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <FadeUp delay={0.4}>
-            <p className="text-black/60 text-xl leading-relaxed max-w-lg font-medium">
+            <p className="text-white/60 text-xl leading-relaxed max-w-lg font-medium mix-blend-difference">
               Real-time metabolic forecasting designed for clinical precision. Identify hyperglycemic risks hours before they manifest.
             </p>
           </FadeUp>
           
-          <FadeUp delay={0.6} className="flex gap-16 md:justify-end">
+          <FadeUp delay={0.6} className="flex gap-16 md:justify-end mix-blend-difference">
             <div>
-              <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-2 border-b border-black/20 pb-2">Monitored</p>
-              <p className="font-display text-6xl text-black"><CountUp to={counts.all} /></p>
+              <p className="text-white/50 text-xs font-mono uppercase tracking-widest mb-2 border-b border-white/20 pb-2">Monitored</p>
+              <p className="font-display text-6xl text-white"><CountUp to={counts.all} /></p>
             </div>
             <div>
-              <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-2 border-b border-black/20 pb-2">Critical</p>
-              <p className="font-display text-6xl text-black"><CountUp to={counts.high} /></p>
+              <p className="text-white/50 text-xs font-mono uppercase tracking-widest mb-2 border-b border-white/20 pb-2">Critical</p>
+              <p className="font-display text-6xl text-white"><CountUp to={counts.high} /></p>
             </div>
           </FadeUp>
         </div>
       </div>
 
-      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8, type: 'spring' }} className="max-w-7xl mx-auto px-6 py-0 sticky top-[108px] z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-0">
-          <motion.div whileFocus={{ scale: 1.02 }} className="flex items-center gap-3 w-full md:w-96 border-r border-slate-200 px-6 py-4 transition-transform origin-left">
-            <Search className="w-5 h-5 text-slate-400" />
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8, type: 'spring' }} className="max-w-[1800px] mx-auto px-12 py-4 relative z-40">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <motion.div whileFocus={{ scale: 1.02 }} className="flex items-center gap-3 w-full md:w-96 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 border border-white/20 transition-transform origin-left">
+            <Search className="w-5 h-5 text-white/50" />
             <input
               type="text"
               placeholder="SEARCH PATIENTS..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-transparent text-black font-bold uppercase tracking-widest placeholder-black/40 focus:outline-none"
+              className="w-full bg-transparent text-white font-mono uppercase tracking-widest placeholder-white/40 focus:outline-none"
             />
           </motion.div>
-          <div className="flex items-center overflow-x-auto w-full md:w-auto hide-scrollbar">
+          <div className="flex items-center overflow-x-auto gap-4 w-full md:w-auto hide-scrollbar">
             <FilterTab label="All" active={filter === 'all'} count={counts.all} onClick={() => setFilter('all')} />
             <FilterTab label="Critical" active={filter === 'high'} count={counts.high} onClick={() => setFilter('high')} />
             <FilterTab label="Elevated" active={filter === 'moderate'} count={counts.moderate} onClick={() => setFilter('moderate')} />
@@ -124,16 +121,24 @@ export function PatientList() {
         </div>
       </motion.div>
 
-      <div className="max-w-7xl mx-auto px-6 pt-16">
+      <div className="max-w-[1800px] mx-auto px-12 pt-12 pb-32">
         {isLoading ? (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-32 flex justify-center">
-            <div className="w-12 h-12 rounded-full border-4 border-black/20 border-t-black animate-spin" />
-          </motion.div>
+          <div className="flex h-64 items-center justify-center">
+            <motion.div animate={{ rotate: 360, scale: [1, 1.2, 1] }} transition={{ duration: 1.5, repeat: Infinity }} className="w-16 h-16 border-t-2 border-white rounded-full" />
+          </div>
         ) : (
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+          <StaggerContainer className="flex overflow-x-auto pb-24 pt-12 gap-12 hide-scrollbar items-center perspective-[1500px]" delay={0.2}>
             <AnimatePresence mode="popLayout">
               {filtered.map((patient) => (
-                <PatientCard key={patient.id} patient={patient} onClick={() => navigate(`/patients/${patient.id}`)} />
+                <motion.div 
+                  key={patient.id} 
+                  className="shrink-0 w-[450px]"
+                  variants={staggerItem}
+                  whileHover={{ scale: 1.05, rotateY: 5, rotateX: 5, zIndex: 50 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                >
+                  <PatientCard patient={patient} onClick={() => navigate(`/patients/${patient.id}`)} />
+                </motion.div>
               ))}
             </AnimatePresence>
           </StaggerContainer>
@@ -151,44 +156,43 @@ function PatientCard({ patient, onClick }: { patient: PatientSummary; onClick: (
       layout
       variants={staggerItem}
       onClick={onClick}
-      className="relative cursor-pointer group flex flex-col justify-between min-h-[260px] bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-lg hover:shadow-sky-100 hover:-translate-y-1 transition-all duration-300 p-6"
+      className="s-tier-card cursor-pointer group flex flex-col justify-between min-h-[500px] p-8"
     >
       <div className="flex justify-between items-start mb-8">
         <div>
-          <h3 className="font-display text-5xl text-black leading-[0.85] tracking-tight uppercase group-hover:underline decoration-4 underline-offset-4">
+          <h3 className="font-display text-5xl text-white leading-[0.85] tracking-tight uppercase">
             {patient.name}
           </h3>
-          <p className="text-xs text-black/60 font-bold uppercase tracking-widest mt-4">
+          <p className="text-xs text-white/60 font-mono uppercase tracking-widest mt-4">
             ID: {patient.id} • {patient.age}Y
           </p>
         </div>
         <SeverityBadge severity={patient.risk_severity} confidence={patient.confidence_score} />
       </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-8 border-t border-black/20 pt-6">
+      <div className="grid grid-cols-2 gap-6 mb-8 border-t border-white/20 pt-6">
         <div>
-          <p className="text-black/50 text-[10px] font-bold uppercase tracking-widest mb-1">Live Glucose</p>
+          <p className="text-white/50 text-[10px] font-mono uppercase tracking-[0.2em] mb-1">Live Glucose</p>
           <div className="flex items-baseline gap-1">
-            <span className="font-display text-4xl text-black leading-none tracking-tight">{patient.current_glucose_mgdl}</span>
+            <span className="font-display text-5xl text-white leading-none tracking-tight">{patient.current_glucose_mgdl}</span>
           </div>
         </div>
         <div>
-          <p className="text-black/50 text-[10px] font-bold uppercase tracking-widest mb-1">Spike Risk</p>
+          <p className="text-white/50 text-[10px] font-mono uppercase tracking-[0.2em] mb-1">Spike Risk</p>
           <div className="flex items-baseline gap-1">
-            <span className="font-display text-4xl text-black leading-none tracking-tight">{probPct}%</span>
+            <span className="font-display text-5xl text-white leading-none tracking-tight">{probPct}%</span>
           </div>
         </div>
       </div>
 
       <div className="flex items-center justify-between mt-auto">
-        {patient.estimated_minutes_to_event ? (
-          <div className="text-xs font-bold uppercase tracking-widest text-black flex items-center gap-2 border border-black px-3 py-1 bg-black/5">
-            ETA {patient.estimated_minutes_to_event}M
-          </div>
-        ) : <span/>}
-        <div className="w-12 h-12 bg-black text-[#e8e5df] flex items-center justify-center transform -rotate-45 group-hover:rotate-0 transition-transform duration-500 ease-[0.34,1.56,0.64,1]">
-          <ArrowRight className="w-6 h-6 stroke-[3]" />
+        <div className="w-full h-px bg-white/20 my-6 relative overflow-hidden">
+          <motion.div className="absolute inset-0 bg-white" animate={{ x: ['-100%', '100%'] }} transition={{ duration: 2, repeat: Infinity, ease: 'linear' }} />
         </div>
+      </div>
+      <div className="flex items-center justify-between text-xs font-mono uppercase tracking-[0.2em] text-white/50">
+        <span>{patient.mrn}</span>
+        <span>ENTER SIMULATION ↗</span>
       </div>
     </motion.div>
   );

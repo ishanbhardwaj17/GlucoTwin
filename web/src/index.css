@@ -1,83 +1,65 @@
-@import "tailwindcss";
-
-@theme {
-  --color-brand-bg: #e8e5df; /* Sandstone / Editorial Beige */
-  --color-brand-black: #0a0a0a;
-  
-  --font-display: "Anton", system-ui, sans-serif;
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: #000000;
+    color: #ffffff;
   }
   
   body {
-    @apply font-sans antialiased;
-    background-color: #f8fafc;
-    overflow-x: hidden;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
+    @apply font-sans antialiased bg-black text-white overflow-x-hidden;
   }
 
-  .floating {
-    animation: float 5s ease-in-out infinite;
+  /* God Level 3D Grid Floor */
+  .grid-floor {
+    position: fixed;
+    bottom: -50%;
+    left: -50%;
+    width: 200%;
+    height: 150%;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+    background-size: 100px 100px;
+    transform: perspective(1000px) rotateX(75deg);
+    transform-origin: top;
+    animation: move-grid 20s linear infinite;
+    z-index: -1;
+    pointer-events: none;
   }
 
-  @keyframes clinical-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.2); }
-    50% { box-shadow: 0 0 0 15px rgba(2, 132, 199, 0); }
+  .grid-fade {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 0%, #000000 70%);
+    z-index: -1;
+    pointer-events: none;
   }
-  
-  .pulse-border {
-    animation: clinical-pulse 3s infinite;
+
+  @keyframes move-grid {
+    0% { transform: perspective(1000px) rotateX(75deg) translateY(0); }
+    100% { transform: perspective(1000px) rotateX(75deg) translateY(100px); }
+  }
+
+  /* Smooth scrolling for 3D carousel */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
 @layer components {
-  /* Editorial card */
-  .editorial-card {
-    @apply bg-transparent border-t-2 border-b-2 border-x-0 border-black p-6 relative z-10 transition-all duration-500;
+  .s-tier-card {
+    @apply relative overflow-hidden bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl transition-all duration-700 ease-out;
+    transform-style: preserve-3d;
   }
-  
-  /* Solid editorial button */
-  .btn-editorial {
-    @apply bg-black text-[#e8e5df] px-6 py-3 font-bold uppercase tracking-widest text-sm relative overflow-hidden flex items-center justify-center;
-    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  .s-tier-card:hover {
+    @apply border-white/80;
+    box-shadow: 0 0 40px rgba(255,255,255,0.1);
   }
-  
-  .btn-editorial::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: #e8e5df;
-    transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 1;
-  }
-  
-  .btn-editorial:hover::before {
-    transform: translateY(0);
-  }
-  
-  .btn-editorial:hover {
-    @apply text-black shadow-[4px_4px_0px_rgba(0,0,0,1)] border-2 border-black;
-    transform: translate(-4px, -4px);
-  }
-  
-  .btn-editorial > * {
-    position: relative;
-    z-index: 2;
-  }
-}
-
-/* Custom cursor style for hover elements */
-.hover-target {
-  cursor: pointer;
 }

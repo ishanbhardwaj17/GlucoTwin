@@ -16,17 +16,22 @@ const queryClient = new QueryClient({
 
 function AppShell() {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-sky-600 selection:text-white overflow-hidden">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black overflow-hidden relative perspective-[2000px]">
+      
+      {/* 4th Dimensional Background Grid */}
+      <div className="grid-floor" />
+      <div className="grid-fade" />
+
       <motion.div initial={{ y: -50 }} animate={{ y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
         <PrototypeBanner />
       </motion.div>
 
-      {/* Editorial Nav */}
+      {/* S-Tier Nav */}
       <motion.nav 
         initial={{ y: -100 }} 
         animate={{ y: 0 }} 
         transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.1 }}
-        className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200 shadow-sm"
+        className="fixed w-full top-0 z-50 bg-black/20 backdrop-blur-3xl border-b border-white/10 mix-blend-difference"
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           
@@ -74,13 +79,15 @@ function AppShell() {
       </motion.nav>
 
       {/* Page content */}
-      <AnimatePresence mode="wait">
-        <Routes>
-          <Route path="/" element={<motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}><PatientList /></motion.div>} />
-          <Route path="/patients/:id" element={<motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}><PatientDetail /></motion.div>} />
-          <Route path="/about" element={<motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}><AboutModel /></motion.div>} />
-        </Routes>
-      </AnimatePresence>
+      <div className="pt-24 min-h-screen">
+        <AnimatePresence mode="wait">
+          <Routes>
+            <Route path="/" element={<motion.div key="home" initial={{ opacity: 0, scale: 0.9, rotateX: 10 }} animate={{ opacity: 1, scale: 1, rotateX: 0 }} exit={{ opacity: 0, scale: 1.1, rotateX: -10 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}><PatientList /></motion.div>} />
+            <Route path="/patients/:id" element={<motion.div key="detail" initial={{ opacity: 0, z: -500 }} animate={{ opacity: 1, z: 0 }} exit={{ opacity: 0, z: 500 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}><PatientDetail /></motion.div>} />
+            <Route path="/about" element={<motion.div key="about" initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -100 }} transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}><AboutModel /></motion.div>} />
+          </Routes>
+        </AnimatePresence>
+      </div>
     </motion.div>
   );
 }
