@@ -23,10 +23,10 @@ function AmbientCursor() {
     window.addEventListener('mousemove', moveCursor);
     return () => window.removeEventListener('mousemove', moveCursor);
   }, []);
-  
+
   return (
-    <div 
-      id="ambient-cursor" 
+    <div
+      id="ambient-cursor"
       className="fixed top-0 left-0 w-[300px] h-[300px] rounded-full bg-gradient-to-tr from-blue-400/20 to-purple-400/20 blur-3xl pointer-events-none z-[-1] transition-transform duration-1000 ease-out will-change-transform"
     />
   );
@@ -44,19 +44,19 @@ function ScrollToTop() {
 
 function AppShell() {
   const location = useLocation();
-  
+
   // Catch-all redirect is handled by Routes
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }} className="min-h-screen text-[#111] font-sans selection:bg-black selection:text-white overflow-hidden relative">
       <ScrollToTop />
       <AmbientCursor />
-      
+
       {/* Floating Pill Nav */}
       <motion.div className="absolute w-full top-8 z-50 px-6 flex justify-center pointer-events-none floating-element-fast" initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}>
         <div className="glass-pill px-8 h-16 flex items-center justify-between gap-12 pointer-events-auto w-full max-w-5xl shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
           <div className="flex items-center gap-8 font-semibold text-sm text-black/60 w-full justify-center">
-            <NavLink to="/" className={({isActive}) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Patients</NavLink>
-            <NavLink to="/about" className={({isActive}) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Architecture</NavLink>
+            <NavLink to="/" className={({ isActive }) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Patients</NavLink>
+            <NavLink to="/about" className={({ isActive }) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Architecture</NavLink>
             <div className="w-px h-4 bg-black/10" />
             <motion.a href="#" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-black bg-black/5 hover:bg-black/10 px-4 py-2 rounded-full transition-colors font-bold">Log In</motion.a>
             <motion.a href="#" whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }} whileTap={{ scale: 0.95 }} className="text-white bg-black px-6 py-2 rounded-full transition-all font-bold">Book Demo</motion.a>
@@ -84,21 +84,26 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         {/* Truly Fixed Background Elements */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-50 blur-[2px]">
-          <img 
-            src="/assets/cell.jpg" 
-            alt="Abstract Cell" 
-            className="absolute top-0 right-0 -translate-y-1/4 translate-x-1/4 w-[600px] h-[600px] object-cover mix-blend-multiply floating-element shadow-2xl"
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30 blur-[2px]">
+          <img
+            src="/assets/cell.jpg"
+            alt="Abstract Cell"
+            className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] object-cover mix-blend-multiply floating-element shadow-2xl"
           />
-          <img 
-            src="/assets/dna.jpg" 
-            alt="Abstract DNA" 
-            className="absolute bottom-0 left-0 translate-y-1/4 -translate-x-1/4 w-[600px] h-[600px] object-cover mix-blend-multiply floating-element-delayed shadow-2xl"
+          <img
+            src="/assets/dna.jpg"
+            alt="Abstract DNA"
+            className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] object-cover mix-blend-multiply floating-element-delayed shadow-2xl"
           />
-          <img 
-            src="/assets/cross.jpg" 
-            alt="Medical Cross" 
-            className="absolute top-1/2 left-[5%] -translate-y-1/2 w-[450px] h-[450px] object-cover rounded-full mix-blend-multiply floating-element-fast shadow-2xl"
+          <img
+            src="/assets/cross.jpg"
+            alt="Medical Cross"
+            className="absolute top-[-5%] left-[-10%] w-[500px] h-[500px] object-cover rounded-full mix-blend-multiply floating-element-fast shadow-2xl"
+          />
+          <img
+            src="/assets/brain.jpg"
+            alt="Holographic Brain"
+            className="absolute bottom-[-15%] left-[-10%] w-[450px] h-[450px] object-cover rounded-full mix-blend-multiply floating-element-delayed shadow-2xl"
           />
         </div>
         <div className="relative z-10">
