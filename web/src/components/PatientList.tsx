@@ -103,9 +103,9 @@ export function PatientList() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-0 sticky top-[108px] z-40 bg-[#e8e5df] border-b-2 border-black">
+      <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.8, type: 'spring' }} className="max-w-7xl mx-auto px-6 py-0 sticky top-[108px] z-40 bg-[#e8e5df] border-b-2 border-black">
         <div className="flex flex-col md:flex-row items-center justify-between gap-0">
-          <div className="flex items-center gap-3 w-full md:w-96 border-r-2 border-black px-6 py-4">
+          <motion.div whileFocus={{ scale: 1.02 }} className="flex items-center gap-3 w-full md:w-96 border-r-2 border-black px-6 py-4 transition-transform origin-left">
             <Search className="w-5 h-5 text-black" />
             <input
               type="text"
@@ -114,7 +114,7 @@ export function PatientList() {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-transparent text-black font-bold uppercase tracking-widest placeholder-black/40 focus:outline-none"
             />
-          </div>
+          </motion.div>
           <div className="flex items-center overflow-x-auto w-full md:w-auto hide-scrollbar">
             <FilterTab label="All" active={filter === 'all'} count={counts.all} onClick={() => setFilter('all')} />
             <FilterTab label="Critical" active={filter === 'high'} count={counts.high} onClick={() => setFilter('high')} />
@@ -122,7 +122,7 @@ export function PatientList() {
             <FilterTab label="Nominal" active={filter === 'low'} count={counts.low} onClick={() => setFilter('low')} />
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-6 pt-16">
         {isLoading ? (

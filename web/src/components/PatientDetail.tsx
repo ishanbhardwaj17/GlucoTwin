@@ -8,7 +8,7 @@ import { GlucoseChart } from './GlucoseChart';
 import { ReplayControls } from './ReplayControls';
 import { ExplanationPanel } from './ExplanationPanel';
 import { WhatIfPanel } from './WhatIfPanel';
-import { FadeUp, CountUp, TextReveal } from './Animations';
+import { FadeUp, CountUp, TextReveal, StaggerContainer, staggerItem } from './Animations';
 import type { ForecastPoint } from '@/types/schema';
 import { cn } from '@/lib/utils';
 
@@ -81,16 +81,16 @@ export function PatientDetail() {
 
       {/* ── Hero Stats ── */}
       <div className="max-w-[1400px] mx-auto px-6 pt-16 pb-12 border-b-2 border-black">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          <FadeUp delay={0.1} className="relative">
+        <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
+          <motion.div variants={staggerItem} className="relative">
             <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2">Live Glucose</p>
             <div className="flex items-baseline gap-2">
               <span className="font-display text-[6rem] text-black leading-none tracking-tighter">{liveGlucose}</span>
             </div>
             <div className="mt-4 border border-black text-black text-[10px] font-bold uppercase tracking-widest px-2 py-1 inline-block">{liveTrend}</div>
-          </FadeUp>
+          </motion.div>
 
-          <FadeUp delay={0.2} className="relative">
+          <motion.div variants={staggerItem} className="relative">
             <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2">Spike Risk</p>
             <span className={cn('font-display text-[6rem] leading-none tracking-tighter', riskPct >= 70 ? 'text-black' : 'text-black')}>
               <CountUp to={riskPct} suffix="%" />
@@ -98,19 +98,19 @@ export function PatientDetail() {
             <div className="mt-6 h-1 w-full bg-black/10 overflow-hidden">
                <motion.div className="absolute inset-y-0 left-0 bg-black" initial={{ width: 0 }} animate={{ width: `${riskPct}%` }} transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }} />
             </div>
-          </FadeUp>
+          </motion.div>
 
-          <FadeUp delay={0.3} className="relative">
+          <motion.div variants={staggerItem} className="relative">
             <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2">Peak Est.</p>
             <span className="font-display text-[6rem] text-black leading-none tracking-tighter">{liveRisk?.peak_predicted_mgdl ?? '--'}</span>
-          </FadeUp>
+          </motion.div>
 
-          <FadeUp delay={0.4} className="relative">
+          <motion.div variants={staggerItem} className="relative">
             <p className="text-black/50 text-xs font-bold uppercase tracking-widest mb-4 border-b border-black/20 pb-2 flex items-center gap-2"><Zap className="w-4 h-4" /> ETA</p>
             <span className="font-display text-[6rem] text-black leading-none tracking-tighter">{liveRisk?.estimated_minutes_to_event ?? '--'}</span>
             <p className="text-black/50 text-xs font-bold uppercase tracking-widest mt-2">Minutes</p>
-          </FadeUp>
-        </div>
+          </motion.div>
+        </StaggerContainer>
       </div>
 
       <div className="max-w-[1400px] mx-auto px-6 pt-12 grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-12">

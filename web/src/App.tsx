@@ -6,7 +6,7 @@ import { PatientList } from '@/components/PatientList';
 import { PatientDetail } from '@/components/PatientDetail';
 import { AboutModel } from '@/pages/AboutModel';
 import { cn } from '@/lib/utils';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2, refetchOnWindowFocus: false } },
@@ -16,11 +16,18 @@ const queryClient = new QueryClient({
 
 function AppShell() {
   return (
-    <div className="min-h-screen bg-[#e8e5df] text-[#0a0a0a] font-sans selection:bg-black selection:text-[#e8e5df]">
-      <PrototypeBanner />
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen bg-[#e8e5df] text-[#0a0a0a] font-sans selection:bg-black selection:text-[#e8e5df] overflow-hidden">
+      <motion.div initial={{ y: -50 }} animate={{ y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
+        <PrototypeBanner />
+      </motion.div>
 
       {/* Editorial Nav */}
-      <nav className="sticky top-[28px] z-50 bg-[#e8e5df]/90 backdrop-blur-md border-b-2 border-black">
+      <motion.nav 
+        initial={{ y: -100 }} 
+        animate={{ y: 0 }} 
+        transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.1 }}
+        className="sticky top-0 z-50 bg-[#e8e5df]/90 backdrop-blur-md border-b-2 border-black"
+      >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           
           {/* Logo */}
@@ -64,15 +71,17 @@ function AppShell() {
             </NavLink>
           </div>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Page content */}
-      <Routes>
-        <Route path="/" element={<PatientList />} />
-        <Route path="/patients/:id" element={<PatientDetail />} />
-        <Route path="/about" element={<AboutModel />} />
-      </Routes>
-    </div>
+      <AnimatePresence mode="wait">
+        <Routes>
+          <Route path="/" element={<motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}><PatientList /></motion.div>} />
+          <Route path="/patients/:id" element={<motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}><PatientDetail /></motion.div>} />
+          <Route path="/about" element={<motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }}><AboutModel /></motion.div>} />
+        </Routes>
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
