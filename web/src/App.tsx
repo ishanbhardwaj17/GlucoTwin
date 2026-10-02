@@ -16,7 +16,7 @@ const queryClient = new QueryClient({
 
 function AppShell() {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen bg-[#e8e5df] text-[#0a0a0a] font-sans selection:bg-black selection:text-[#e8e5df] overflow-hidden">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }} className="min-h-screen animated-bg text-[#0a0a0a] font-sans selection:bg-white selection:text-black overflow-hidden">
       <motion.div initial={{ y: -50 }} animate={{ y: 0 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
         <PrototypeBanner />
       </motion.div>
@@ -26,7 +26,7 @@ function AppShell() {
         initial={{ y: -100 }} 
         animate={{ y: 0 }} 
         transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.1 }}
-        className="sticky top-0 z-50 bg-[#e8e5df]/90 backdrop-blur-md border-b-2 border-black"
+        className="sticky top-0 z-50 bg-white/20 backdrop-blur-xl border-b-2 border-black shadow-[0_8px_32px_rgba(0,0,0,0.1)]"
       >
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           

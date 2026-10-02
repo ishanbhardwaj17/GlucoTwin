@@ -17,8 +17,19 @@
   
   body {
     @apply font-sans antialiased;
-    background-color: var(--color-brand-bg);
     overflow-x: hidden;
+  }
+  
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animated-bg {
+    background: linear-gradient(-45deg, #ff007f, #7f00ff, #00ffff, #00ff7f, #ffff00, #ff7f00);
+    background-size: 600% 600%;
+    animation: gradient-shift 10s ease infinite;
   }
 }
 
