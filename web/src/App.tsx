@@ -40,6 +40,23 @@ function AppShell() {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }} className="min-h-screen text-[#111] font-sans selection:bg-black selection:text-white overflow-hidden relative">
       <AmbientCursor />
       
+      {/* Blurred Floating Healthcare Background Images */}
+      <motion.img 
+        src="/assets/cell.jpg" 
+        alt="Abstract Cell" 
+        className="fixed top-20 -left-20 w-96 h-96 object-cover rounded-full mix-blend-multiply opacity-40 blur-3xl floating-element-delayed -z-[5] pointer-events-none"
+      />
+      <motion.img 
+        src="/assets/dna.jpg" 
+        alt="Abstract DNA" 
+        className="fixed bottom-0 right-10 w-[500px] h-[500px] object-cover rounded-full mix-blend-multiply opacity-50 blur-[40px] floating-element -z-[5] pointer-events-none"
+      />
+      <motion.img 
+        src="/assets/cross.jpg" 
+        alt="Abstract Cross" 
+        className="fixed top-1/2 left-1/3 w-[400px] h-[400px] object-cover rounded-full mix-blend-multiply opacity-30 blur-2xl floating-element-fast -z-[5] pointer-events-none"
+      />
+
       {/* Floating Pill Nav */}
       <motion.div className="fixed w-full top-8 z-50 px-6 flex justify-center pointer-events-none floating-element-fast" initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}>
         <div className="glass-pill px-8 h-16 flex items-center justify-between gap-12 pointer-events-auto w-full max-w-5xl shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
