@@ -109,7 +109,7 @@ function PatientCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateX, rotateY, transformStyle: 'preserve-3d' }}
-      className="glass-card cursor-pointer group flex flex-col justify-between min-h-[440px] p-8 overflow-hidden relative bg-white border border-white"
+      className="glass-card cursor-pointer group flex flex-col justify-between min-h-[400px] p-6 overflow-hidden relative bg-white border border-white"
     >
       {/* Ambient orb */}
       <GlowOrb
@@ -152,32 +152,27 @@ function PatientCard({
       )}
 
       {/* Header */}
-      <div className="flex justify-between items-start mb-8 relative z-10">
-        <div>
+      <div className="flex flex-wrap gap-2 justify-between items-start mb-6 relative z-10">
+        <div className="min-w-0 flex-1">
           <motion.h3
             className={cn(
-              'text-4xl font-black tracking-tighter transition-all duration-300',
-              isCritical ? 'text-red-600' : 'text-black group-hover:text-shimmer-blue'
+              'text-2xl font-black tracking-tighter transition-all duration-300 truncate',
+              isCritical ? 'text-red-600' : 'text-black'
             )}
-            animate={isCritical ? {} : {}}
           >
             {patient.name}
           </motion.h3>
-          <p className="text-sm text-black/40 font-bold mt-2 tracking-wide uppercase">
+          <p className="text-xs text-black/40 font-bold mt-1 tracking-wide uppercase truncate">
             MRN: {patient.mrn} · {patient.age}Y
           </p>
         </div>
 
         {/* Status Badge */}
         <motion.div
-          animate={
-            isCritical
-              ? { scale: [1, 1.08, 1], opacity: [1, 0.8, 1] }
-              : {}
-          }
+          animate={isCritical ? { scale: [1, 1.06, 1], opacity: [1, 0.8, 1] } : {}}
           transition={{ duration: 1.8, repeat: Infinity }}
           className={cn(
-            'px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border flex items-center gap-1.5',
+            'flex-shrink-0 px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border flex items-center gap-1',
             isCritical
               ? 'bg-red-500/10 text-red-600 border-red-500/30'
               : patient.risk_severity === 'moderate'
@@ -186,9 +181,9 @@ function PatientCard({
           )}
         >
           {isCritical && (
-            <span className="relative flex h-2 w-2">
+            <span className="relative flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
             </span>
           )}
           {patient.risk_severity}
