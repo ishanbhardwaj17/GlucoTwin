@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { TextReveal, FadeUp, CountUp, AnimatedLine, Marquee, StaggerContainer, staggerChild } from '@/components/Animations';
+import { TextReveal, FadeUp, CountUp, AnimatedLine, Marquee, StaggerContainer, staggerChild, GlowOrb, SpinningRing } from '@/components/Animations';
 import { ParticleField } from '@/components/ParticleField';
 import { cn } from '@/lib/utils';
 
@@ -60,6 +60,15 @@ export function AboutModel() {
         </div>
       </div>
 
+      {/* Marquee Banner */}
+      <div className="relative z-10 py-6 border-y border-zinc-900 overflow-hidden">
+        <Marquee speed={25}>
+          {['AUROC 86%', 'MAE 10mg/dL', 'LATENCY <50ms', 'LEAD TIME 72min', '±30 ACCURACY 94%', 'PERSONALIZED AFTER 7 DAYS'].map((text) => (
+            <span key={text} className="font-mono text-[10px] text-zinc-700 uppercase tracking-[0.4em] mx-12">{text}</span>
+          ))}
+        </Marquee>
+      </div>
+
       <AnimatedLine className="h-px max-w-6xl mx-auto" delay={0.2} />
 
       {/* ── Architecture Section ── */}
@@ -86,20 +95,56 @@ export function AboutModel() {
           </div>
 
           <FadeUp delay={0.2}>
-            <div className="bg-zinc-950 border border-zinc-800 p-6 font-mono text-[11px] text-zinc-400 leading-loose">
-              <p className="text-[#d4ff00] mb-4">$ glucotwin --describe-architecture</p>
+            <motion.div
+              className="bg-zinc-950 border border-zinc-800 p-6 font-mono text-[11px] text-zinc-400 leading-loose relative overflow-hidden group"
+              whileHover={{ borderColor: 'rgba(212,255,0,0.15)' }}
+            >
+              {/* Ambient glow */}
+              <GlowOrb size={200} color="from-[#d4ff00]/5 to-emerald-500/5" className="-top-20 -right-20" delay={1} />
+
+              <motion.p
+                className="text-[#d4ff00] mb-4"
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+              >
+                $ glucotwin --describe-architecture
+              </motion.p>
               <p className="text-zinc-600">┌────────────────────────────────┐</p>
-              <p>│ <span className="text-white">Temporal Conv Network</span>  (TCN)   │ → long-range CGM deps</p>
-              <p>│ <span className="text-white">XGBoost</span>               (GBT)   │ → structured features</p>
-              <p>│ <span className="text-white">Gaussian Process</span>      (GP)    │ → P10/P50/P90 intervals</p>
-              <p>│ <span className="text-white">Bayesian Online</span>       (BOL)   │ → per-patient weights</p>
+              {[
+                { name: 'Temporal Conv Network', abbr: 'TCN', desc: '→ long-range CGM deps' },
+                { name: 'XGBoost', abbr: 'GBT', desc: '→ structured features' },
+                { name: 'Gaussian Process', abbr: 'GP', desc: '→ P10/P50/P90 intervals' },
+                { name: 'Bayesian Online', abbr: 'BOL', desc: '→ per-patient weights' },
+              ].map((row, i) => (
+                <motion.p
+                  key={row.abbr}
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + i * 0.08 }}
+                >
+                  │ <span className="text-white">{row.name.padEnd(20)}</span> ({row.abbr}){'   '}│ {row.desc}
+                </motion.p>
+              ))}
               <p className="text-zinc-600">└────────────────────────────────┘</p>
               <p className="mt-4">Inference latency .... <span className="text-[#d4ff00]">&lt;50ms</span> (CPU)</p>
               <p>Personalization .... after <span className="text-white">7 days</span> of data</p>
               <p>Input window ........ <span className="text-white">8h</span> (32 CGM readings)</p>
-              <p className="mt-4 text-zinc-600">status ........... <span className="text-[#d4ff00]">stable</span></p>
-              <p className="text-zinc-600">_</p>
-            </div>
+              <motion.p
+                className="mt-4 text-zinc-600"
+                animate={{ opacity: [1, 0.4, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                status ........... <span className="text-[#d4ff00]">stable</span>
+              </motion.p>
+              <motion.span
+                className="text-zinc-600"
+                animate={{ opacity: [1, 0, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              >_</motion.span>
+            </motion.div>
           </FadeUp>
         </div>
       </div>
@@ -197,11 +242,18 @@ export function AboutModel() {
       {/* ── Footer ── */}
       <div className="relative z-10 max-w-6xl mx-auto px-8 pt-12 border-t border-zinc-900">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-12">
-          <p className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
-            © 2026 GlucoTwin · Built for the parts that fail.
-          </p>
+          <div className="flex items-center gap-3">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              className="w-4 h-4 rounded-full border border-zinc-700 border-t-[#d4ff00]"
+            />
+            <p className="font-mono text-[10px] text-zinc-700 uppercase tracking-widest">
+              © 2026 GlucoTwin · Built for the parts that fail.
+            </p>
+          </div>
           <div className="flex gap-8">
-            <Link to="/" className="font-mono text-[10px] text-zinc-600 hover:text-[#d4ff00] uppercase tracking-widest transition-colors">Triage →</Link>
+            <Link to="/" className="font-mono text-[10px] text-zinc-600 hover:text-[#d4ff00] uppercase tracking-widest transition-colors animated-underline">Triage →</Link>
           </div>
         </div>
       </div>

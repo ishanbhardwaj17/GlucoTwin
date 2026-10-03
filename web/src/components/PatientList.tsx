@@ -321,23 +321,48 @@ export function PatientList() {
   return (
     <div className="relative pb-32 max-w-[1600px] mx-auto px-6">
 
-      {/* Hero */}
-      <div className="py-24 md:py-40 text-center max-w-6xl mx-auto relative perspective-1000">
+      {/* ═══════════════════════════════════════════════════════════
+           HERO — Industry Grade
+      ═══════════════════════════════════════════════════════════ */}
+      <div className="py-24 md:py-36 text-center max-w-6xl mx-auto relative perspective-1000">
         {/* Ambient background glows */}
         <GlowOrb size={600} color="from-blue-500/8 to-purple-500/8" className="-top-40 -left-40" />
         <GlowOrb size={500} color="from-pink-500/6 to-orange-500/6" className="-bottom-20 -right-20" delay={2} />
+        <GlowOrb size={400} color="from-emerald-500/5 to-cyan-500/5" className="top-1/2 -right-40" delay={4} />
 
         {/* Spinning decorative rings */}
         <SpinningRing size={700} thickness={1} color="rgba(99,102,241,0.05)" speed={30} className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         <SpinningRing size={500} thickness={1} color="rgba(168,85,247,0.06)" speed={20} reverse className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <SpinningRing size={300} thickness={1} color="rgba(6,182,212,0.04)" speed={15} className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
-        {/* Hero title */}
+        {/* Tag */}
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.8, type: 'spring' }}
+          className="mb-8"
+        >
+          <motion.span
+            animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-black/10 bg-white/50 backdrop-blur-sm text-black/60"
+            style={{ backgroundSize: '200% 100%' }}
+          >
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+            </span>
+            Digital Twin Platform
+          </motion.span>
+        </motion.div>
+
+        {/* Hero title — shimmer gradient text */}
         <motion.div
           initial={{ opacity: 0, y: 120, rotateX: 45, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, rotateX: 0, scale: 1 }}
           transition={{ duration: 1.6, type: 'spring', bounce: 0.35 }}
         >
-          <h1 className="text-6xl md:text-[8rem] lg:text-[140px] leading-[0.85] tracking-tighter font-black text-black drop-shadow-2xl floating-element inline-block">
+          <h1 className="text-6xl md:text-[8rem] lg:text-[140px] leading-[0.85] tracking-tighter font-black drop-shadow-2xl floating-element inline-block text-shimmer">
             GlucoTwin
           </h1>
         </motion.div>
@@ -347,32 +372,49 @@ export function PatientList() {
           initial={{ opacity: 0, scale: 0.85, filter: 'blur(12px)', y: 30 }}
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)', y: 0 }}
           transition={{ duration: 1.4, delay: 0.35, type: 'spring' }}
-          className="text-2xl md:text-4xl text-black/55 mt-16 font-bold tracking-tight max-w-4xl mx-auto leading-tight"
+          className="text-xl md:text-3xl text-black/50 mt-12 font-bold tracking-tight max-w-3xl mx-auto leading-snug"
         >
-          The first forecasting engine where clinicians can see the future right on the timeline.
+          The first forecasting engine where clinicians can{' '}
+          <motion.span
+            animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="text-shimmer-blue"
+            style={{ backgroundSize: '200% 100%' }}
+          >
+            see the future
+          </motion.span>{' '}
+          right on the timeline.
         </motion.p>
 
         {/* Animated stat strip */}
-        <FadeUp delay={0.8} className="mt-16 flex items-center justify-center gap-12 flex-wrap">
+        <FadeUp delay={0.8} className="mt-16 flex items-center justify-center gap-8 md:gap-12 flex-wrap">
           {[
             { label: 'AUROC', value: '86%' },
             { label: 'Lead Time', value: '72 min' },
             { label: 'Accuracy', value: '94%' },
-            { label: 'Patients', value: counts.all.toString() },
+            { label: 'Latency', value: '<50ms' },
           ].map((stat, i) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 + i * 0.1, type: 'spring', stiffness: 200 }}
-              whileHover={{ scale: 1.08 }}
-              className="text-center"
+              transition={{ delay: 0.9 + i * 0.12, type: 'spring', stiffness: 200 }}
+              whileHover={{ scale: 1.1, y: -3 }}
+              className="text-center group cursor-default"
             >
-              <p className="text-2xl font-black tracking-tighter text-black">{stat.value}</p>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-black/40 mt-1">{stat.label}</p>
+              <p className="text-2xl font-black tracking-tighter text-black group-hover:text-shimmer-blue transition-all">{stat.value}</p>
+              <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-black/35 mt-1">{stat.label}</p>
             </motion.div>
           ))}
         </FadeUp>
+
+        {/* Divider with animated scale */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: 1.2, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-20 mx-auto w-24 h-px bg-black/10 origin-left"
+        />
       </div>
 
       {/* Search + Filters */}
