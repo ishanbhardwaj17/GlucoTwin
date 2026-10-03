@@ -335,27 +335,6 @@ export function PatientList() {
         <SpinningRing size={500} thickness={1} color="rgba(168,85,247,0.06)" speed={20} reverse className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
         <SpinningRing size={300} thickness={1} color="rgba(6,182,212,0.04)" speed={15} className="top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
 
-        {/* Tag */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, type: 'spring' }}
-          className="mb-8"
-        >
-          <motion.span
-            animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-black/10 bg-white/50 backdrop-blur-sm text-black/60"
-            style={{ backgroundSize: '200% 100%' }}
-          >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
-            </span>
-            Digital Twin Platform
-          </motion.span>
-        </motion.div>
-
         {/* Hero title — shimmer gradient text */}
         <motion.div
           initial={{ opacity: 0, y: 120, rotateX: 45, scale: 0.8 }}
