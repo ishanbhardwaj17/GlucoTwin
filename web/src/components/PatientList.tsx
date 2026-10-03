@@ -196,17 +196,17 @@ function PatientCard({
           {/* Glucose */}
           <motion.div
             whileHover={{ scale: 1.03 }}
-            className="bg-black/[0.03] rounded-3xl p-5 border border-black/5 shadow-inner"
+            className="bg-black/[0.03] rounded-2xl p-4 border border-black/5 shadow-inner overflow-hidden"
           >
-            <p className="text-black/40 text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-1.5">
+            <p className="text-black/40 text-[9px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1">
               Live Glucose
               <TrendIcon trend={patient.trend ?? 'stable'} />
             </p>
             <div className="flex items-baseline gap-1">
-              <span className="text-5xl font-black tracking-tighter text-black">
+              <span className="text-4xl font-black tracking-tighter text-black leading-none">
                 {patient.current_glucose_mgdl}
               </span>
-              <span className="text-xs font-bold text-black/30 mb-1">mg/dL</span>
+              <span className="text-[10px] font-bold text-black/30">mg/dL</span>
             </div>
           </motion.div>
 
@@ -214,32 +214,20 @@ function PatientCard({
           <motion.div
             whileHover={{ scale: 1.03 }}
             className={cn(
-              'rounded-3xl p-5 border shadow-inner transition-colors duration-500',
-              isCritical
-                ? 'bg-red-500/10 border-red-500/20'
-                : 'bg-black/[0.03] border-black/5'
+              'rounded-2xl p-4 border shadow-inner transition-colors duration-500 overflow-hidden',
+              isCritical ? 'bg-red-500/10 border-red-500/20' : 'bg-black/[0.03] border-black/5'
             )}
           >
-            <p
-              className={cn(
-                'text-[10px] font-bold uppercase tracking-widest mb-3',
-                isCritical ? 'text-red-600' : 'text-black/40'
-              )}
-            >
+            <p className={cn('text-[9px] font-bold uppercase tracking-widest mb-2', isCritical ? 'text-red-600' : 'text-black/40')}>
               Spike Risk
             </p>
             <div className="flex items-baseline gap-1">
-              <span
-                className={cn(
-                  'text-5xl font-black tracking-tighter',
-                  isCritical ? 'text-red-600' : 'text-black'
-                )}
-              >
+              <span className={cn('text-4xl font-black tracking-tighter leading-none', isCritical ? 'text-red-600' : 'text-black')}>
                 {probPct}%
               </span>
             </div>
             {/* Animated risk bar */}
-            <div className="mt-3 h-1 w-full bg-black/5 rounded-full overflow-hidden">
+            <div className="mt-2 h-0.5 w-full bg-black/10 rounded-full overflow-hidden">
               <motion.div
                 className={cn('h-full rounded-full', isCritical ? 'bg-red-500' : 'bg-black')}
                 initial={{ width: 0 }}
