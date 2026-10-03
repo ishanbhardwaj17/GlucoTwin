@@ -202,11 +202,11 @@ function PatientCard({
               Live Glucose
               <TrendIcon trend={patient.trend ?? 'stable'} />
             </p>
-            <div className="flex items-baseline gap-1">
+            <div className="flex flex-col">
               <span className="text-4xl font-black tracking-tighter text-black leading-none">
                 {patient.current_glucose_mgdl}
               </span>
-              <span className="text-[10px] font-bold text-black/30">mg/dL</span>
+              <span className="text-[9px] font-bold text-black/30 mt-1 uppercase tracking-widest">mg/dL</span>
             </div>
           </motion.div>
 
