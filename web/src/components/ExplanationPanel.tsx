@@ -18,7 +18,7 @@ function AttributionBar({ attr, maxShare, index }: { attr: FactorAttribution; ma
     >
       {/* Hover highlight */}
       <motion.div
-        className="absolute inset-0 bg-black/[0.02] opacity-0 group-hover:opacity-100 transition-opacity -z-0 rounded-sm"
+        className="absolute inset-0 bg-black/[0.02] opacity-0 group-hover:opacity-100 transition-opacity -z-0 rounded-full"
       />
 
       <div className="flex justify-between items-baseline relative z-10">
@@ -130,7 +130,7 @@ export function ExplanationPanel({ patientId }: Props) {
         animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
         transition={{ delay: 0.5, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
         whileHover={{ scale: 1.01 }}
-        className="p-8 bg-black border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,0.2)] relative overflow-hidden text-[#e8e5df]"
+        className="p-8 bg-black border-2 border-black shadow-[8px_8px_0px_rgba(0,0,0,0.2)] relative overflow-hidden text-[#e8e5df] rounded-[32px]"
       >
         {/* Animated grid overlay */}
         <motion.div

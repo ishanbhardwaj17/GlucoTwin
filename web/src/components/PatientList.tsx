@@ -196,7 +196,7 @@ function PatientCard({
           {/* Glucose */}
           <motion.div
             whileHover={{ scale: 1.03 }}
-            className="bg-black/[0.03] rounded-2xl p-4 border border-black/5 shadow-inner overflow-hidden"
+            className="bg-black/[0.03] rounded-[32px] p-4 border border-black/5 shadow-inner overflow-hidden"
           >
             <p className="text-black/40 text-[9px] font-bold uppercase tracking-widest mb-2 flex items-center gap-1">
               Live Glucose
@@ -214,7 +214,7 @@ function PatientCard({
           <motion.div
             whileHover={{ scale: 1.03 }}
             className={cn(
-              'rounded-2xl p-4 border shadow-inner transition-colors duration-500 overflow-hidden',
+              'rounded-[32px] p-4 border shadow-inner transition-colors duration-500 overflow-hidden',
               isCritical ? 'bg-red-500/10 border-red-500/20' : 'bg-black/[0.03] border-black/5'
             )}
           >

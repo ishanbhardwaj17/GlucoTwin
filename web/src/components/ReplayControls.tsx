@@ -22,7 +22,7 @@ export function ReplayControls({
   });
 
   return (
-    <div className="flex items-stretch bg-[#e8e5df] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+    <div className="flex items-stretch bg-[#e8e5df] border-2 border-black shadow-[4px_4px_0px_rgba(0,0,0,1)] rounded-full overflow-hidden">
 
       {/* Status indicator */}
       <div className="flex items-center gap-2 px-4 border-r-2 border-black bg-white/50">

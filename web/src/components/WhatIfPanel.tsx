@@ -20,7 +20,7 @@ function Slider({ id, label, value, min, max, step, unit, onChange }: any) {
   return (
     <motion.div
       whileHover={{ backgroundColor: 'rgba(255,255,255,0.9)' }}
-      className="bg-white/40 p-6 border-2 border-black group transition-all duration-300 relative overflow-hidden"
+      className="bg-white/40 p-6 border-2 border-black group transition-all duration-300 relative overflow-hidden first:rounded-l-[32px] last:rounded-r-[32px]"
     >
       {/* Subtle background grid */}
       <div
@@ -48,9 +48,9 @@ function Slider({ id, label, value, min, max, step, unit, onChange }: any) {
         </motion.span>
       </div>
 
-      <div className="relative h-2 w-full bg-black/10 border border-black overflow-hidden relative z-10">
+      <div className="relative h-2 w-full bg-black/10 border border-black overflow-hidden relative z-10 rounded-full">
         <motion.div
-          className="absolute inset-y-0 left-0 bg-black"
+          className="absolute inset-y-0 left-0 bg-black rounded-full"
           animate={{ width: `${pct}%` }}
           transition={{ duration: 0.15, type: 'spring', stiffness: 600, damping: 40 }}
         />
@@ -100,7 +100,7 @@ function MetricCard({ label, baseline, scenario, delta, unit, invertDelta, index
       animate="show"
       custom={index}
       whileHover={{ y: -4, scale: 1.02, boxShadow: '0 20px 40px rgba(0,0,0,0.15)' }}
-      className="bg-white/40 border-2 border-black p-5 shadow-[4px_4px_0px_rgba(0,0,0,1)] relative overflow-hidden transition-shadow"
+      className="bg-white/40 border-2 border-black p-5 shadow-[4px_4px_0px_rgba(0,0,0,1)] relative overflow-hidden transition-shadow rounded-[32px]"
     >
       {/* Ambient glow */}
       <GlowOrb
@@ -119,7 +119,7 @@ function MetricCard({ label, baseline, scenario, delta, unit, invertDelta, index
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.5, opacity: 0, y: 10 }}
             transition={{ type: 'spring', stiffness: 400 }}
-            className={cn('px-2 py-0.5 font-bold text-[10px] uppercase tracking-wider', deltaColor)}
+            className={cn('px-3 py-1 font-bold text-[10px] uppercase tracking-wider rounded-full', deltaColor)}
           >
             {delta === 0 ? 'SAME' : `${isPositive ? '+' : ''}${delta}${unit}`}
           </motion.span>
@@ -186,7 +186,7 @@ export function WhatIfPanel({ patientId, onForecastChange }: Props) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] bg-white/40"
+        className="grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-black shadow-[6px_6px_0px_rgba(0,0,0,1)] bg-white/40 rounded-[32px] overflow-hidden"
       >
         <Slider id="whatif-carbs" label="Carb Load" value={carbs} min={0} max={120} step={5} unit="g" onChange={setCarbs} />
         <div className="hidden md:block w-[2px] bg-black h-full" />
@@ -200,7 +200,7 @@ export function WhatIfPanel({ patientId, onForecastChange }: Props) {
           disabled={mutation.isPending}
           whileHover={!mutation.isPending ? { scale: 1.02, y: -2, boxShadow: '0 20px 40px rgba(0,0,0,0.2)' } : {}}
           whileTap={!mutation.isPending ? { scale: 0.97 } : {}}
-          className="flex-1 flex items-center justify-center gap-3 disabled:opacity-50 h-16 bg-black text-white border-2 border-black font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_rgba(0,0,0,0.3)] transition-all"
+          className="flex-1 flex items-center justify-center gap-3 disabled:opacity-50 h-16 bg-black text-white border-2 border-black font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_rgba(0,0,0,0.3)] transition-all rounded-[32px]"
         >
           <AnimatePresence mode="wait">
             {mutation.isPending ? (
@@ -242,7 +242,7 @@ export function WhatIfPanel({ patientId, onForecastChange }: Props) {
               whileHover={{ scale: 1.1, backgroundColor: '#000', color: '#e8e5df' }}
               whileTap={{ scale: 0.9 }}
               onClick={handleReset}
-              className="w-16 h-16 flex items-center justify-center bg-transparent border-2 border-black text-black transition-colors shadow-[4px_4px_0px_rgba(0,0,0,1)]"
+              className="w-16 h-16 flex items-center justify-center bg-transparent border-2 border-black text-black transition-colors shadow-[4px_4px_0px_rgba(0,0,0,1)] rounded-full"
             >
               <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 0.5, delay: 0.1 }}>
                 <RotateCcw className="w-5 h-5" />
