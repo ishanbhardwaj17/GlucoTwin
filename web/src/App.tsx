@@ -51,15 +51,71 @@ function AppShell() {
       <ScrollToTop />
       <AmbientCursor />
 
-      {/* Floating Pill Nav */}
-      <motion.div className="absolute w-full top-8 z-50 px-6 flex justify-center pointer-events-none floating-element-fast" initial={{ y: -100, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}>
-        <div className="glass-pill px-8 h-16 flex items-center justify-between gap-12 pointer-events-auto w-full max-w-5xl shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
-          <div className="flex items-center gap-8 font-semibold text-sm text-black/60 w-full justify-center">
-            <NavLink to="/" className={({ isActive }) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Patients</NavLink>
-            <NavLink to="/about" className={({ isActive }) => isActive ? "text-black drop-shadow-md scale-105 transition-all" : "hover:text-black hover:scale-105 transition-all"}>Architecture</NavLink>
-            <div className="w-px h-4 bg-black/10" />
-            <motion.a href="#" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-black bg-black/5 hover:bg-black/10 px-4 py-2 rounded-full transition-colors font-bold">Log In</motion.a>
-            <motion.a href="#" whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }} whileTap={{ scale: 0.95 }} className="text-white bg-black px-6 py-2 rounded-full transition-all font-bold">Book Demo</motion.a>
+      {/* Premium Floating Nav */}
+      <motion.div 
+        className="fixed w-full top-6 z-50 px-6 flex justify-center pointer-events-none" 
+        initial={{ y: -100, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.2 }}
+      >
+        <div className="glass-pill px-4 h-16 flex items-center justify-between gap-8 pointer-events-auto w-full max-w-5xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-black/10 bg-white/80 backdrop-blur-xl">
+          
+          {/* Logo */}
+          <motion.div whileHover={{ scale: 1.05 }} className="flex items-center gap-2 pl-4">
+            <motion.div
+              animate={{ rotate: [0, 360] }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+              className="w-6 h-6 rounded-full border-2 border-black/20 border-t-black"
+            />
+            <span className="font-black text-sm tracking-tight text-black">GlucoTwin</span>
+          </motion.div>
+
+          {/* Links */}
+          <div className="flex items-center gap-2 bg-black/[0.04] p-1 rounded-full border border-black/5">
+            <NavLink to="/">
+              {({ isActive }) => (
+                <motion.div
+                  className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all ${
+                    isActive ? 'text-white' : 'text-black/50 hover:text-black hover:bg-black/5'
+                  }`}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="navBubble"
+                      className="absolute inset-0 bg-black rounded-full shadow-lg"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">Patients</span>
+                </motion.div>
+              )}
+            </NavLink>
+            <NavLink to="/about">
+              {({ isActive }) => (
+                <motion.div
+                  className={`relative px-6 py-2 rounded-full text-sm font-semibold transition-all ${
+                    isActive ? 'text-white' : 'text-black/50 hover:text-black hover:bg-black/5'
+                  }`}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {isActive && (
+                    <motion.div
+                      layoutId="navBubble"
+                      className="absolute inset-0 bg-black rounded-full shadow-lg"
+                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                    />
+                  )}
+                  <span className="relative z-10">Architecture</span>
+                </motion.div>
+              )}
+            </NavLink>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2 pr-2">
+            <motion.a href="#" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="text-black hover:bg-black/5 px-4 py-2 rounded-full transition-colors font-bold text-sm">Log In</motion.a>
+            <motion.a href="#" whileHover={{ scale: 1.05, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }} whileTap={{ scale: 0.95 }} className="text-white bg-black px-6 py-2 rounded-full transition-all font-bold text-sm">Book Demo</motion.a>
           </div>
         </div>
       </motion.div>
